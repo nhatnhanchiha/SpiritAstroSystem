@@ -1,0 +1,121 @@
+﻿<#@ template language="C#" hostspecific="true"#>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System" #>
+<#@ output extension="cs" #>
+<#
+var files=GetCsvFileNames();
+foreach (string item in files.Where(w => !w.EndsWith("Context"))) {
+#>
+/////////////////////////////////////////////////////////////////
+//
+//              AUTO-GENERATED
+//
+/////////////////////////////////////////////////////////////////
+
+using SpiritAstro.DataTier.BaseConnect;
+using SpiritAstro.DataTier.Models;
+using SpiritAstro.BusinessTier.Generations.Repositories;
+namespace SpiritAstro.BusinessTier.Generations.Services
+{
+    
+    public partial interface I<#= item #>Service:IBaseService<<#= item #>>
+    {
+    }
+    public partial class <#= item #>Service:BaseService<<#= item #>>,I<#= item #>Service
+    {
+        public <#= item #>Service(IUnitOfWork unitOfWork,I<#= item #>Repository repository):base(unitOfWork,repository){}
+    }
+}
+<#
+  // End of file.
+  SaveOutput(item.ToString() + "ServiceGen.cs","Services");
+}
+#>
+<#
+foreach (string item in files.Where(w => !w.EndsWith("Context"))) {
+#>
+/////////////////////////////////////////////////////////////////
+//
+//              AUTO-GENERATED
+//
+/////////////////////////////////////////////////////////////////
+
+using Microsoft.EntityFrameworkCore;
+using SpiritAstro.DataTier.BaseConnect;
+using SpiritAstro.DataTier.Models;
+namespace SpiritAstro.BusinessTier.Generations.Repositories
+{
+    public partial interface I<#= item #>Repository :IBaseRepository<<#= item #>>
+    {
+    }
+    public partial class <#= item #>Repository :BaseRepository<<#= item #>>, I<#= item #>Repository
+    {
+         public <#= item #>Repository(DbContext dbContext) : base(dbContext)
+         {
+         }
+    }
+}
+
+<#
+  // End of file.
+  SaveOutput(item.ToString() + "RepositoryGen.cs","Repositories");
+}
+#>
+
+/////////////////////////////////////////////////////////////////
+//
+//              AUTO-GENERATED
+//
+/////////////////////////////////////////////////////////////////
+
+using SpiritAstro.DataTier.Models;
+using Microsoft.Extensions.DependencyInjection;
+using SpiritAstro.BusinessTier.Generations.Services;
+using SpiritAstro.BusinessTier.Generations.Repositories;
+using Microsoft.EntityFrameworkCore;
+using SpiritAstro.DataTier.BaseConnect;
+namespace SpiritAstro.BusinessTier.Generations.DependencyInjection
+{
+    public static class DependencyInjectionResolverGen
+    {
+        public static void InitializerDI(this IServiceCollection services)
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<DbContext, <#= files.FirstOrDefault(f=>f.EndsWith("Context")) #>>();
+        <#
+        foreach (string item in files.Where(w => !w.EndsWith("Context"))) {
+        #>
+
+            services.AddScoped<I<#= item #>Service, <#= item #>Service>();
+            services.AddScoped<I<#= item #>Repository, <#= item #>Repository>();
+        <#
+        }
+        #>
+}
+    }
+}
+<#
+ SaveOutput("DependencyInjectionResolverGen.cs","DependencyInjection");
+#>
+
+
+
+<#+
+private void SaveOutput(string outputFileName,string folder) {
+  string templateDirectory = Path.GetDirectoryName(Host.TemplateFile);
+  if(!Directory.Exists(Path.Combine(templateDirectory,folder))) { Directory.CreateDirectory(Path.Combine(templateDirectory,folder)); }
+  string outputFilePath = Path.Combine(templateDirectory,folder, outputFileName);
+  File.WriteAllText(outputFilePath, this.GenerationEnvironment.ToString()); 
+   this.GenerationEnvironment.Clear();
+}
+private IEnumerable<string> GetCsvFileNames()
+    {
+        var currentPath = Host.ResolvePath(string.Empty);
+        var path = Path.Combine(currentPath , @"..\..\SpiritAstro.DataTier\Models");
+        return Directory.GetFiles(path, "*.cs").Select(s => new FileInfo(s).Name.Replace(".cs",""));        
+    }
+#>

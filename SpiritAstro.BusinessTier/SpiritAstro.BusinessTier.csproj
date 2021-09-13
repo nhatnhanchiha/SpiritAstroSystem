@@ -4,4 +4,37 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Update="Generations\Generator.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>Generator.cs</LastGenOutput>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Generations\Generator.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>Generator.tt</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Casbin.NET" Version="1.11.0" />
+      <PackageReference Include="Casbin.NET.Adapter.EFCore" Version="1.7.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SpiritAstro.DataTier\SpiritAstro.DataTier.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="AutoMapperModules" />
+      <Folder Include="Commons\Constants" />
+      <Folder Include="Commons\Enums" />
+      <Folder Include="ViewModels" />
+    </ItemGroup>
+
 </Project>
