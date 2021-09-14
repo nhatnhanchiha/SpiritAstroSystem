@@ -38,8 +38,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public LoginResponse LoginByPhoneForCustomer(LoginRequest loginRequest)
         {
             var user = Get().Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
-                .FirstOrDefault(u => u.PhoneNumber == loginRequest.PhoneNumber && u.Password == loginRequest.Password && u.UserRoles.Any(ur => ur.Role.Id == "888"));
+                .FirstOrDefault(u => u.PhoneNumber == loginRequest.PhoneNumber && u.Password == loginRequest.Password && u.DeletedAt == null && u.UserRoles.Any(ur => ur.RoleId == "888"));
             if (user == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Invalid phone number or password");
@@ -56,7 +55,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             {
                 UserId = user.Id,
                 PhoneNumber = user.PhoneNumber,
-                Roles = string.Join(",", user.UserRoles.Select(ur => ur.Role.Id).ToArray()),
+                Roles = string.Join(",", user.UserRoles.Select(ur => ur.RoleId).ToArray()),
                 BufferTime = long.Parse(_configuration["jwt:BufferTime"]),
                 Exp = DateTime.UtcNow.AddSeconds(Convert.ToDouble(_configuration["jwt:ExpiresTime"])).Ticks,
                 Iss = _configuration["Jwt:Issuer"],
