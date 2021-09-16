@@ -6,7 +6,7 @@
 
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Generations.Repositories;
-using Test.DataTier.BaseConnect;
+using SpiritAstro.DataTier.BaseConnect;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {

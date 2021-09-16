@@ -13,7 +13,7 @@ namespace SpiritAstro.DataTier.BaseConnect
         Task<IDbContextTransaction> BeginTransaction(CancellationToken cancellationToken = default);
         int Count();
         TEntity Get<TKey>(TKey id);
-        Task<TEntity> GetAsyn<TKey>(TKey id);
+        Task<TEntity> GetAsync<TKey>(TKey id);
         IQueryable<TEntity> Get();
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
         TEntity FirstOrDefault();

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SpiritAstro.DataTier.BaseConnect;
 
-namespace Test.DataTier.BaseConnect
+namespace SpiritAstro.DataTier.BaseConnect
 {
     public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : class
     {
@@ -97,7 +96,7 @@ namespace Test.DataTier.BaseConnect
 
         public async Task<TEntity> GetAsyn<TKey>(TKey id)
         {
-            return await repository.GetAsyn(id);
+            return await repository.GetAsync(id);
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)

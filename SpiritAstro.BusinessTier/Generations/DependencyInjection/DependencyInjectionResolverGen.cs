@@ -11,7 +11,6 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using Microsoft.EntityFrameworkCore;
 using SpiritAstro.DataTier.BaseConnect;
-using Test.DataTier.BaseConnect;
 
 namespace SpiritAstro.BusinessTier.Generations.DependencyInjection
 {

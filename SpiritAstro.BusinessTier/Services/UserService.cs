@@ -12,8 +12,8 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.User;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
+using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
-using Test.DataTier.BaseConnect;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {

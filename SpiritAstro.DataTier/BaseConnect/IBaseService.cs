@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Test.DataTier.BaseConnect
+namespace SpiritAstro.DataTier.BaseConnect
 {
     public interface IBaseService<TEntity> where TEntity : class
     {

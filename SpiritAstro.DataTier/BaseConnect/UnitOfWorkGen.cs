@@ -1,25 +1,24 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Test.DataTier.BaseConnect;
 
 namespace SpiritAstro.DataTier.BaseConnect
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private DbContext dbContext;
+        private DbContext _dbContext;
         public UnitOfWork(DbContext dbContext)
         {
-            this.dbContext = dbContext;
+            this._dbContext = dbContext;
         }
         public int Commit()
         {
-            return this.dbContext.SaveChanges();
+            return this._dbContext.SaveChanges();
         }
 
         public Task<int> CommitAsync()
         {
-            return this.dbContext.SaveChangesAsync();
+            return this._dbContext.SaveChangesAsync();
         }
 
         public void Dispose()
@@ -30,10 +29,10 @@ namespace SpiritAstro.DataTier.BaseConnect
 
         private void Dispose(bool disposing)
         {
-            if (disposing && this.dbContext != null)
+            if (disposing && this._dbContext != null)
             {
-                this.dbContext.Dispose();
-                this.dbContext = null;
+                this._dbContext.Dispose();
+                this._dbContext = null;
             }
         }
     }

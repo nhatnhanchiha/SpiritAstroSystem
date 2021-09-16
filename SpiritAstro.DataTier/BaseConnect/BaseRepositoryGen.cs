@@ -90,7 +90,7 @@ namespace SpiritAstro.DataTier.BaseConnect
         {
             return this.DbSet.Where(predicate);
         }
-        public async Task<TEntity> GetAsyn<TKey>(TKey id)
+        public async Task<TEntity> GetAsync<TKey>(TKey id)
         {
             return await DbSet.FindAsync(id);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Test.DataTier.BaseConnect
+namespace SpiritAstro.DataTier.BaseConnect
 {
     public interface IUnitOfWork : IDisposable
     {

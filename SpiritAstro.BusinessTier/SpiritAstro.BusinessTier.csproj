@@ -24,6 +24,7 @@
       <PackageReference Include="Casbin.NET.Adapter.EFCore" Version="1.7.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.12" />
     </ItemGroup>
 
     <ItemGroup>
