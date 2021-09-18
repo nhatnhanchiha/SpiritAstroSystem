@@ -9,6 +9,9 @@
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>Generator.cs</LastGenOutput>
       </None>
+      <None Update="Commons\Resources\rbac_model.conf">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
