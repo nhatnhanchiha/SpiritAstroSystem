@@ -23,7 +23,7 @@ namespace SpiritAstro.WebApi.Middlewares
             _configuration = configuration;
         }
 
-        public async Task Invoke(HttpContext context, IUserService userService)
+        public async Task Invoke(HttpContext context)
         {
             var token = context.Request.Headers["x-token"].FirstOrDefault()?.Split(" ").Last();
 
