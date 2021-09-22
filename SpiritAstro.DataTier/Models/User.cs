@@ -9,25 +9,35 @@ namespace SpiritAstro.DataTier.Models
     {
         public User()
         {
-            InvoiceCustomers = new HashSet<Invoice>();
-            InvoiceProfessors = new HashSet<Invoice>();
-            UserPosts = new HashSet<UserPost>();
+            BookingAstrologers = new HashSet<Booking>();
+            BookingCustomers = new HashSet<Booking>();
+            CustomerZodiacs = new HashSet<CustomerZodiac>();
+            FieldDetails = new HashSet<FieldDetail>();
+            FollowAstrologers = new HashSet<Follow>();
+            FollowCustomers = new HashSet<Follow>();
             UserRoles = new HashSet<UserRole>();
         }
 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
-        public DateTime DayOfBirth { get; set; }
+        public int StatusPayment { get; set; }
         public string Password { get; set; }
         public bool Gender { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public DateTime? DeletedAt { get; set; }
+        public int Status { get; set; }
+        public double LatitudeOfBirth { get; set; }
+        public double LongitudeOfBirth { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
+        public DateTimeOffset? DeletedAt { get; set; }
+        public DateTime TimeOfBirth { get; set; }
 
-        public virtual ICollection<Invoice> InvoiceCustomers { get; set; }
-        public virtual ICollection<Invoice> InvoiceProfessors { get; set; }
-        public virtual ICollection<UserPost> UserPosts { get; set; }
+        public virtual ICollection<Booking> BookingAstrologers { get; set; }
+        public virtual ICollection<Booking> BookingCustomers { get; set; }
+        public virtual ICollection<CustomerZodiac> CustomerZodiacs { get; set; }
+        public virtual ICollection<FieldDetail> FieldDetails { get; set; }
+        public virtual ICollection<Follow> FollowAstrologers { get; set; }
+        public virtual ICollection<Follow> FollowCustomers { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }

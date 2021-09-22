@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace SpiritAstro.DataTier.Models
 {
-    public partial class UserPost
+    public partial class PostPlanet
     {
-        public int UserId { get; set; }
-        public int PostId { get; set; }
+        public long PostId { get; set; }
+        public int PlanetId { get; set; }
 
+        public virtual Planet Planet { get; set; }
         public virtual Post Post { get; set; }
-        public virtual User User { get; set; }
     }
 }

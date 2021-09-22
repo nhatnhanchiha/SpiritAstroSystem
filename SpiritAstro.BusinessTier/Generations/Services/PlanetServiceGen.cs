@@ -4,18 +4,17 @@
 //
 /////////////////////////////////////////////////////////////////
 
+using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Generations.Repositories;
-using SpiritAstro.DataTier.BaseConnect;
-
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
-    public partial interface ISubCategoryService:IBaseService<SubCategory>
+    public partial interface IPlanetService:IBaseService<Planet>
     {
     }
-    public partial class SubCategoryService:BaseService<SubCategory>,ISubCategoryService
+    public partial class PlanetService:BaseService<Planet>,IPlanetService
     {
-        public SubCategoryService(IUnitOfWork unitOfWork,ISubCategoryRepository repository):base(unitOfWork,repository){}
+        public PlanetService(IUnitOfWork unitOfWork,IPlanetRepository repository):base(unitOfWork,repository){}
     }
 }

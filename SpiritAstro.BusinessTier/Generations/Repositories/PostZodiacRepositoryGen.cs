@@ -9,12 +9,12 @@ using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 namespace SpiritAstro.BusinessTier.Generations.Repositories
 {
-    public partial interface IInvoiceRepository :IBaseRepository<Invoice>
+    public partial interface IPostZodiacRepository :IBaseRepository<PostZodiac>
     {
     }
-    public partial class InvoiceRepository :BaseRepository<Invoice>, IInvoiceRepository
+    public partial class PostZodiacRepository :BaseRepository<PostZodiac>, IPostZodiacRepository
     {
-         public InvoiceRepository(DbContext dbContext) : base(dbContext)
+         public PostZodiacRepository(DbContext dbContext) : base(dbContext)
          {
          }
     }

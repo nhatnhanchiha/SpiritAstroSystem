@@ -5,16 +5,13 @@ using System.Collections.Generic;
 
 namespace SpiritAstro.DataTier.Models
 {
-    public partial class Category
+    public partial class FamousPerson
     {
-        public Category()
-        {
-            Posts = new HashSet<Post>();
-        }
-
         public long Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
+        public int ZodiacId { get; set; }
 
-        public virtual ICollection<Post> Posts { get; set; }
+        public virtual Zodiac Zodiac { get; set; }
     }
 }

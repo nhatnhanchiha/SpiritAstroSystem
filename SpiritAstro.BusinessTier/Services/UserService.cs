@@ -19,8 +19,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IUserService
     {
-        User GetById(int id);
-        LoginResponse LoginByPhoneForCustomer(LoginRequest loginRequest);
+        User GetById(long id);
+        LoginResponse LoginByPhone(LoginRequest loginRequest);
     }
     
     public partial class UserService
@@ -30,15 +30,15 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         {
             _configuration = configuration;
         }
-        public User GetById(int id)
+        public User GetById(long id)
         {
             return this.Get(id);
         }
 
-        public LoginResponse LoginByPhoneForCustomer(LoginRequest loginRequest)
+        public LoginResponse LoginByPhone(LoginRequest loginRequest)
         {
             var user = Get().Include(u => u.UserRoles)
-                .FirstOrDefault(u => u.PhoneNumber == loginRequest.PhoneNumber && u.Password == loginRequest.Password && u.DeletedAt == null && u.UserRoles.Any(ur => ur.RoleId == "888"));
+                .FirstOrDefault(u => u.PhoneNumber == loginRequest.PhoneNumber && u.Password == loginRequest.Password && u.DeletedAt == null);
             if (user == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Invalid phone number or password");
@@ -54,7 +54,6 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             var customClaims = new CustomClaims
             {
                 UserId = user.Id,
-                PhoneNumber = user.PhoneNumber,
                 Roles = string.Join(",", user.UserRoles.Select(ur => ur.RoleId).ToArray()),
                 BufferTime = long.Parse(_configuration["jwt:BufferTime"]),
                 Exp = DateTime.UtcNow.AddSeconds(Convert.ToDouble(_configuration["jwt:ExpiresTime"])).Ticks,
@@ -82,10 +81,12 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 PhoneNumber = user.PhoneNumber,
                 Gender = user.Gender,
                 Roles = customClaims.Roles,
-                DayOfBirth = user.DayOfBirth,
+                TimeOfBirth = user.TimeOfBirth,
                 Token = tokenString,
                 BufferTime = customClaims.BufferTime * 1000,
-                ExpiresAt = (long)TimeSpan.FromTicks(customClaims.Exp).TotalMilliseconds,
+                ExpiresAt = ((long)new DateTime(customClaims.Exp).ToUniversalTime().Subtract(
+                    new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                ).TotalSeconds) * 1000,
             };
         }
     }

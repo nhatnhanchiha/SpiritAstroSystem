@@ -10,11 +10,11 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
-    public partial interface IUserService:IBaseService<User>
+    public partial interface IBookingService:IBaseService<Booking>
     {
     }
-    public partial class UserService:BaseService<User>,IUserService
+    public partial class BookingService:BaseService<Booking>,IBookingService
     {
-        public UserService(IUnitOfWork unitOfWork,IUserRepository repository):base(unitOfWork,repository){}
+        public BookingService(IUnitOfWork unitOfWork,IBookingRepository repository):base(unitOfWork,repository){}
     }
 }

@@ -7,7 +7,7 @@ namespace SpiritAstro.DataTier.Models
 {
     public partial class UserRole
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public string RoleId { get; set; }
 
         public virtual Role Role { get; set; }

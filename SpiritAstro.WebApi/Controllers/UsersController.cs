@@ -18,12 +18,12 @@ namespace SpiritAstro.WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpPost("login_by_phone_for_customer")]
+        [HttpPost("login")]
         public IActionResult LoginByPhone([FromBody] LoginRequest loginRequest)
         {
             try
             {
-                var loginResponse = _userService.LoginByPhoneForCustomer(loginRequest);
+                var loginResponse = _userService.LoginByPhone(loginRequest);
                 return Ok(MyResponse<LoginResponse>.OkWithDetail(loginResponse, "Login success"));
             }
             catch (ErrorResponse e)

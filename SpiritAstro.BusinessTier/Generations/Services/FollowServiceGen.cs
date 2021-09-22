@@ -7,15 +7,14 @@
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Generations.Repositories;
-
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
-    public partial interface IInvoiceService:IBaseService<Invoice>
+    public partial interface IFollowService:IBaseService<Follow>
     {
     }
-    public partial class InvoiceService:BaseService<Invoice>,IInvoiceService
+    public partial class FollowService:BaseService<Follow>,IFollowService
     {
-        public InvoiceService(IUnitOfWork unitOfWork,IInvoiceRepository repository):base(unitOfWork,repository){}
+        public FollowService(IUnitOfWork unitOfWork,IFollowRepository repository):base(unitOfWork,repository){}
     }
 }

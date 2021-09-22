@@ -4,10 +4,9 @@
 //
 /////////////////////////////////////////////////////////////////
 
+using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Generations.Repositories;
-using SpiritAstro.DataTier.BaseConnect;
-
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     

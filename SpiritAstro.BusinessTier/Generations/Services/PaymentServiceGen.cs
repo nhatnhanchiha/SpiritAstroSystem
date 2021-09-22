@@ -10,11 +10,11 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
-    public partial interface IUserService:IBaseService<User>
+    public partial interface IPaymentService:IBaseService<Payment>
     {
     }
-    public partial class UserService:BaseService<User>,IUserService
+    public partial class PaymentService:BaseService<Payment>,IPaymentService
     {
-        public UserService(IUnitOfWork unitOfWork,IUserRepository repository):base(unitOfWork,repository){}
+        public PaymentService(IUnitOfWork unitOfWork,IPaymentRepository repository):base(unitOfWork,repository){}
     }
 }

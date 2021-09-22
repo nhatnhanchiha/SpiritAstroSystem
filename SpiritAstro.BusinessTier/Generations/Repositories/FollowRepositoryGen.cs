@@ -9,12 +9,12 @@ using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 namespace SpiritAstro.BusinessTier.Generations.Repositories
 {
-    public partial interface IUserPostRepository :IBaseRepository<UserPost>
+    public partial interface IFollowRepository :IBaseRepository<Follow>
     {
     }
-    public partial class UserPostRepository :BaseRepository<UserPost>, IUserPostRepository
+    public partial class FollowRepository :BaseRepository<Follow>, IFollowRepository
     {
-         public UserPostRepository(DbContext dbContext) : base(dbContext)
+         public FollowRepository(DbContext dbContext) : base(dbContext)
          {
          }
     }

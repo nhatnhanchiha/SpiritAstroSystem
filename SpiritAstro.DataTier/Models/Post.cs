@@ -9,19 +9,21 @@ namespace SpiritAstro.DataTier.Models
     {
         public Post()
         {
-            SubCategoryPosts = new HashSet<SubCategoryPost>();
-            UserPosts = new HashSet<UserPost>();
+            PostPlanets = new HashSet<PostPlanet>();
+            PostZodiacs = new HashSet<PostZodiac>();
         }
 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
         public bool IsApprove { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public DateTime? DeletedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
+        public DateTimeOffset? DeletedAt { get; set; }
+        public long CategoryId { get; set; }
 
-        public virtual ICollection<SubCategoryPost> SubCategoryPosts { get; set; }
-        public virtual ICollection<UserPost> UserPosts { get; set; }
+        public virtual Category Category { get; set; }
+        public virtual ICollection<PostPlanet> PostPlanets { get; set; }
+        public virtual ICollection<PostZodiac> PostZodiacs { get; set; }
     }
 }

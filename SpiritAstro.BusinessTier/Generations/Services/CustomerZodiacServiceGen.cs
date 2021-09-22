@@ -4,18 +4,17 @@
 //
 /////////////////////////////////////////////////////////////////
 
+using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Generations.Repositories;
-using SpiritAstro.DataTier.BaseConnect;
-
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
-    public partial interface IUserPostService:IBaseService<UserPost>
+    public partial interface ICustomerZodiacService:IBaseService<CustomerZodiac>
     {
     }
-    public partial class UserPostService:BaseService<UserPost>,IUserPostService
+    public partial class CustomerZodiacService:BaseService<CustomerZodiac>,ICustomerZodiacService
     {
-        public UserPostService(IUnitOfWork unitOfWork,IUserPostRepository repository):base(unitOfWork,repository){}
+        public CustomerZodiacService(IUnitOfWork unitOfWork,ICustomerZodiacRepository repository):base(unitOfWork,repository){}
     }
 }

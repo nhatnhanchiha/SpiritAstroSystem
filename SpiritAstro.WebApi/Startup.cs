@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SpiritAstro.BusinessTier.Generations.DependencyInjection;
+using SpiritAstro.DataTier.Models;
 using SpiritAstro.WebApi.AppStart;
 using SpiritAstro.WebApi.Middlewares;
 
@@ -36,6 +38,9 @@ namespace SpiritAstro.WebApi
             services.InitCasbin();
             
             services.InitializerDI();
+
+            services.AddDbContext<SpiritAstroContext>(opt =>
+                opt.UseSqlServer(Configuration.GetConnectionString("DbContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

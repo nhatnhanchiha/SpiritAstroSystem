@@ -7,7 +7,7 @@ namespace SpiritAstro.BusinessTier.Entities
 {
     public class CustomClaims
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public string PhoneNumber { get; set; }
         public string Roles { get; set; }
         public long BufferTime { get; set; }
@@ -34,7 +34,6 @@ namespace SpiritAstro.BusinessTier.Entities
             return new[]
             {
                 new Claim("user_id", UserId.ToString()),
-                new Claim("phone_number", PhoneNumber),
                 new Claim("roles", Roles),
                 new Claim("buffer_time", BufferTime.ToString()),
                 new Claim("exp", Exp.ToString()),
