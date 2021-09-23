@@ -4,8 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.User;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
+using SpiritAstro.BusinessTier.ViewModels.Users;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
@@ -24,13 +26,17 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     {
         User GetById(long id);
         LoginResponse LoginByPhone(LoginRequest loginRequest);
+        Task<UserModels> GetDetailUser(long id);
         Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest);
+        Task UpdateUser(long id, UpdateUserRequest updateUserRequest);
+        Task DeleteUser(long id);
     }
     
     public partial class UserService
     {
         private readonly IConfiguration _configuration;
-        private readonly IConfigurationProvider _mapper;
+        private readonly AutoMapper.IConfigurationProvider _mapper;
+
         public UserService(IUnitOfWork unitOfWork,IUserRepository repository, IConfiguration configuration, IMapper mapper):base(unitOfWork,repository)
         {
             _configuration = configuration;
@@ -102,6 +108,52 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                     new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 ).TotalSeconds) * 1000,
             };
+        }
+
+        public async Task<UserModels> GetDetailUser(long id)
+        {
+            var userModel = await Get().Where(u => u.Id == id).ProjectTo<UserModels>(_mapper).FirstOrDefaultAsync();
+            if (userModel == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any user matches with id = {id}");
+            }
+
+            return userModel;
+        }
+
+        public async Task UpdateUser(long userID, UpdateUserRequest updateUserRequest)
+        {
+            var userInDb = await Get().FirstOrDefaultAsync(u => u.Id == userID);
+            if (userInDb == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any user matches with id = {userID}");
+            }
+
+            var mapper = _mapper.CreateMapper();
+            var userInRequest = mapper.Map<User>(updateUserRequest);
+
+            userInDb.Name = userInRequest.Name;
+            userInDb.PhoneNumber = userInRequest.PhoneNumber;
+            userInDb.Password = userInRequest.Password;
+            userInDb.LatitudeOfBirth = userInRequest.LatitudeOfBirth;
+            userInDb.LongitudeOfBirth = userInRequest.LongitudeOfBirth;
+            userInDb.Gender = userInRequest.Gender;
+
+            await UpdateAsyn(userInDb);
+        }
+
+        public async Task DeleteUser(long userID)
+        {
+            var userInDb = await Get().FirstOrDefaultAsync(u => u.Id == userID);
+            if (userInDb == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any user matches with id = {userID}");
+            }
+
+            await DeleteAsyn(userInDb);
         }
     }
 }

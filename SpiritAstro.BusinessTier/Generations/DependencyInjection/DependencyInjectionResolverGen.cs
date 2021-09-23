@@ -27,7 +27,7 @@ namespace SpiritAstro.BusinessTier.Generations.DependencyInjection
             services.AddScoped<ICasbinRuleRepository, CasbinRuleRepository>();
         
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IFieldRepository, CategoryRepository>();
         
             services.AddScoped<ICustomerZodiacService, CustomerZodiacService>();
             services.AddScoped<ICustomerZodiacRepository, CustomerZodiacRepository>();

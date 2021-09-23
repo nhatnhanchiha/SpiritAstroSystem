@@ -6,6 +6,7 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.User;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
+using SpiritAstro.BusinessTier.ViewModels.Users;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -50,6 +51,63 @@ namespace SpiritAstro.WebApi.Controllers
             catch (ErrorResponse e)
             {
                 return Ok(MyResponse<object>.FailWithMessage( e.Error.Message));
+            }
+        }
+
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> GerDetailUser(long id)
+        {
+            try
+            {
+                var userModel = await _userService.GetDetailUser(id);
+                return Ok(MyResponse<UserModels>.OkWithData(userModel));
+            }
+            catch (ErrorResponse e)
+            {
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
+
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> UpdateUser(long id, [FromBody] UpdateUserRequest user)
+        {
+            try
+            {
+                await _userService.UpdateUser(id, user);
+                return Ok(MyResponse<object>.OkWithMessage("Updated success"));
+            }
+            catch (ErrorResponse e)
+            {
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Updated fail. " + e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage("Updated fail. " + e.Error.Message));
+            }
+        }
+
+        [HttpDelete("{id:long}")]
+        public async Task<IActionResult> DeleteUser(long id)
+        {
+            try
+            {
+                await _userService.DeleteUser(id);
+                return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
+            }
+            catch (ErrorResponse e)
+            {
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Deleted fail. " + e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage("Deleted fail. " + e.Error.Message));
             }
         }
     }
