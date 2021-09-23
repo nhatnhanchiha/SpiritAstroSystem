@@ -28,6 +28,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         LoginResponse LoginByPhone(LoginRequest loginRequest);
         Task<UserModels> GetDetailUser(long id);
         Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest);
+        Task UpdateUser(long id, UpdateUserRequest updateUserRequest);
+        Task DeleteUser(long id);
     }
     
     public partial class UserService
@@ -118,6 +120,40 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             }
 
             return userModel;
+        }
+
+        public async Task UpdateUser(long userID, UpdateUserRequest updateUserRequest)
+        {
+            var userInDb = await Get().FirstOrDefaultAsync(u => u.Id == userID);
+            if (userInDb == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any user matches with id = {userID}");
+            }
+
+            var mapper = _mapper.CreateMapper();
+            var userInRequest = mapper.Map<User>(updateUserRequest);
+
+            userInDb.Name = userInRequest.Name;
+            userInDb.PhoneNumber = userInRequest.PhoneNumber;
+            userInDb.Password = userInRequest.Password;
+            userInDb.LatitudeOfBirth = userInRequest.LatitudeOfBirth;
+            userInDb.LongitudeOfBirth = userInRequest.LongitudeOfBirth;
+            userInDb.Gender = userInRequest.Gender;
+
+            await UpdateAsyn(userInDb);
+        }
+
+        public async Task DeleteUser(long userID)
+        {
+            var userInDb = await Get().FirstOrDefaultAsync(u => u.Id == userID);
+            if (userInDb == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any user matches with id = {userID}");
+            }
+
+            await DeleteAsyn(userInDb);
         }
     }
 }

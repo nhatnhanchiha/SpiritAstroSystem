@@ -72,5 +72,43 @@ namespace SpiritAstro.WebApi.Controllers
                 return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
             }
         }
+
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> UpdateUser(long id, [FromBody] UpdateUserRequest user)
+        {
+            try
+            {
+                await _userService.UpdateUser(id, user);
+                return Ok(MyResponse<object>.OkWithMessage("Updated success"));
+            }
+            catch (ErrorResponse e)
+            {
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Updated fail. " + e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage("Updated fail. " + e.Error.Message));
+            }
+        }
+
+        [HttpDelete("{id:long}")]
+        public async Task<IActionResult> DeleteUser(long id)
+        {
+            try
+            {
+                await _userService.DeleteUser(id);
+                return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
+            }
+            catch (ErrorResponse e)
+            {
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Deleted fail. " + e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage("Deleted fail. " + e.Error.Message));
+            }
+        }
     }
 }

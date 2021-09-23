@@ -18,6 +18,7 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
                 .ForMember(des => des.Status, opt => opt.MapFrom(ignore => (int)UserStatus.Active));
             mc.CreateMap<DetailUserRequest, User>();
             mc.CreateMap<User, UserModels>().ReverseMap();
+            mc.CreateMap<UpdateUserRequest, User>();
         }
     }
 }
