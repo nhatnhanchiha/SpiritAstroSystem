@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
       <PackageReference Include="Casbin.NET" Version="1.11.0" />
       <PackageReference Include="Casbin.NET.Adapter.EFCore" Version="1.7.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
@@ -35,10 +36,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="AutoMapperModules" />
       <Folder Include="Commons\Constants" />
       <Folder Include="Commons\Enums" />
-      <Folder Include="ViewModels" />
     </ItemGroup>
 
 </Project>

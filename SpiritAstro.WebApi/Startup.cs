@@ -39,6 +39,8 @@ namespace SpiritAstro.WebApi
             
             services.InitializerDI();
 
+            services.ConfigureAutoMapperServices();
+
             services.AddDbContext<SpiritAstroContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DbContext")));
         }
