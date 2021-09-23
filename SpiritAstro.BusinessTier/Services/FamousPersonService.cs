@@ -73,7 +73,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task DeleteFamousPerson(long famouspersonId)
         {
-            var categoryInDb = await Get().FirstOrDefaultAsync(c => c.Id == famouspersonId);
+            var categoryInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == famouspersonId);
             if (categoryInDb == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
