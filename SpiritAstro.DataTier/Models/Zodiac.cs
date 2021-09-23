@@ -10,6 +10,7 @@ namespace SpiritAstro.DataTier.Models
         public Zodiac()
         {
             CustomerZodiacs = new HashSet<CustomerZodiac>();
+            FamousPeople = new HashSet<FamousPerson>();
             PostZodiacs = new HashSet<PostZodiac>();
         }
 
@@ -21,6 +22,7 @@ namespace SpiritAstro.DataTier.Models
         public DateTimeOffset? DeletedAt { get; set; }
 
         public virtual ICollection<CustomerZodiac> CustomerZodiacs { get; set; }
+        public virtual ICollection<FamousPerson> FamousPeople { get; set; }
         public virtual ICollection<PostZodiac> PostZodiacs { get; set; }
     }
 }

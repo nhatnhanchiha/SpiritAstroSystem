@@ -37,7 +37,6 @@
 
     <ItemGroup>
       <Folder Include="Commons\Constants" />
-      <Folder Include="Commons\Enums" />
     </ItemGroup>
 
 </Project>

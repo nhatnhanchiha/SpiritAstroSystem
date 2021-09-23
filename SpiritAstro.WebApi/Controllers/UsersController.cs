@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,20 @@ namespace SpiritAstro.WebApi.Controllers
                 }
                 
                 return Ok(MyResponse<object>.FailWithMessage("Not handler error"));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterCustomer([FromBody] RegisterCustomerRequest registerCustomerRequest)
+        {
+            try
+            {
+                var userId = await _userService.RegisterCustomer(registerCustomerRequest);
+                return Ok(MyResponse<long>.OkWithDetail(userId, $"Created success user with id = {userId}"));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage( e.Error.Message));
             }
         }
 
