@@ -1,9 +1,11 @@
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.User;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
+using SpiritAstro.BusinessTier.ViewModels.Users;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -34,6 +36,25 @@ namespace SpiritAstro.WebApi.Controllers
                 }
                 
                 return Ok(MyResponse<object>.FailWithMessage("Not handler error"));
+            }
+        }
+
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> GerDetailUser(long id)
+        {
+            try
+            {
+                var userModel = await _userService.GetDetailUser(id);
+                return Ok(MyResponse<UserModels>.OkWithData(userModel));
+            }
+            catch (ErrorResponse e)
+            {
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
             }
         }
     }

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +15,7 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.User;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
+using SpiritAstro.BusinessTier.ViewModels.Users;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 
@@ -21,14 +25,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     {
         User GetById(long id);
         LoginResponse LoginByPhone(LoginRequest loginRequest);
+        Task<UserModels> GetDetailUser(long id);
     }
     
     public partial class UserService
     {
         private readonly IConfiguration _configuration;
-        public UserService(IUnitOfWork unitOfWork,IUserRepository repository, IConfiguration configuration):base(unitOfWork,repository)
+        private readonly AutoMapper.IConfigurationProvider _mapper;
+
+        public UserService(IUnitOfWork unitOfWork,IUserRepository repository, IConfiguration configuration, IMapper mapper):base(unitOfWork,repository)
         {
             _configuration = configuration;
+            _mapper = mapper.ConfigurationProvider;
         }
         public User GetById(long id)
         {
@@ -88,6 +96,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                     new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 ).TotalSeconds) * 1000,
             };
+        }
+
+        public async Task<UserModels> GetDetailUser(long id)
+        {
+            var userModel = await Get().Where(u => u.Id == id).ProjectTo<UserModels>(_mapper).FirstOrDefaultAsync();
+            if (userModel == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any user matches with id = {id}");
+            }
+
+            return userModel;
         }
     }
 }
