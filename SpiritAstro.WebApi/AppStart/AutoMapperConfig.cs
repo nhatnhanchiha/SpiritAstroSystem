@@ -13,6 +13,7 @@ namespace SpiritAstro.WebApi.AppStart
             {
                 mc.AddProfile(new AutoMapperResolver());
                 mc.ConfigCategoryMapperModule();
+                mc.ConfigUserMapperModule();
             });
             var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

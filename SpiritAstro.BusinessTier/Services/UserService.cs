@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +16,7 @@ using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
@@ -21,19 +24,30 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     {
         User GetById(long id);
         LoginResponse LoginByPhone(LoginRequest loginRequest);
+        Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest);
     }
     
     public partial class UserService
     {
         private readonly IConfiguration _configuration;
-        public UserService(IUnitOfWork unitOfWork,IUserRepository repository, IConfiguration configuration):base(unitOfWork,repository)
+        private readonly IConfigurationProvider _mapper;
+        public UserService(IUnitOfWork unitOfWork,IUserRepository repository, IConfiguration configuration, IMapper mapper):base(unitOfWork,repository)
         {
             _configuration = configuration;
+            _mapper = mapper.ConfigurationProvider;
         }
         public User GetById(long id)
         {
             return this.Get(id);
         }
+
+        public async Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest)
+        {
+            var mapper = _mapper.CreateMapper();
+            var user = mapper.Map<User>(registerCustomerRequest);
+            await CreateAsyn(user);
+            return user.Id;
+        } 
 
         public LoginResponse LoginByPhone(LoginRequest loginRequest)
         {
