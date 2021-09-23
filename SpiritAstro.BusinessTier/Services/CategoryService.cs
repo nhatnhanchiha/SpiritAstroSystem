@@ -27,7 +27,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     {
         private readonly IConfigurationProvider _mapper;
 
-        public CategoryService(IUnitOfWork unitOfWork, ICategoryRepository repository, IMapper mapper) : base(
+        public CategoryService(IUnitOfWork unitOfWork, IFieldRepository repository, IMapper mapper) : base(
             unitOfWork, repository)
         {
             _mapper = mapper.ConfigurationProvider;

@@ -15,6 +15,6 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     }
     public partial class CategoryService:BaseService<Category>,ICategoryService
     {
-        public CategoryService(IUnitOfWork unitOfWork,ICategoryRepository repository):base(unitOfWork,repository){}
+        public CategoryService(IUnitOfWork unitOfWork,IFieldRepository repository):base(unitOfWork,repository){}
     }
 }
