@@ -140,6 +140,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             userInDb.LatitudeOfBirth = userInRequest.LatitudeOfBirth;
             userInDb.LongitudeOfBirth = userInRequest.LongitudeOfBirth;
             userInDb.Gender = userInRequest.Gender;
+            userInDb.TimeOfBirth = userInRequest.TimeOfBirth;
+            userInDb.UpdatedAt = DateTimeOffset.Now;
 
             await UpdateAsyn(userInDb);
         }
@@ -153,7 +155,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                     $"Cannot find any user matches with id = {userID}");
             }
 
-            await DeleteAsyn(userInDb);
+            userInDb.DeletedAt = DateTimeOffset.Now;
+
+            await UpdateAsyn(userInDb);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace SpiritAstro.WebApi.Controllers
             {
                 var fieldId = await _fieldService.CreateField(createFieldRequest);
                 return Ok(MyResponse<long>.OkWithDetail(fieldId,
-                    $"Created success category with id = {fieldId}"));
+                    $"Created success field with id = {fieldId}"));
             }
             catch (ErrorResponse e)
             {
