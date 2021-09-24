@@ -16,7 +16,7 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
         {
             mc.CreateMap<CreateFieldRequest, Field>();
             mc.CreateMap<Field, FieldModel>().ReverseMap();
-            //mc.CreateMap<UpdateCategoryRequest, Category>();
+            mc.CreateMap<UpdateFieldRequest, Field>();
         }
     }
 }
