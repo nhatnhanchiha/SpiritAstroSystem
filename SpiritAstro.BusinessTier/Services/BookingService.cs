@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -47,7 +48,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         {
             var mapper = _mapper.CreateMapper();
             var booking = mapper.Map<Booking>(createBookingRequest);
-            if (booking.StartTime >= booking.EndTime)
+            if (booking.StartTime < DateTimeOffset.Now || booking.StartTime >= booking.EndTime)
             {
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest,
                     $"Invalid time");
