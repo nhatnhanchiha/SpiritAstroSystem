@@ -19,13 +19,13 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IFamousPersonService
     {
-        Task<FamousPersonModel> GetFamousPersonById(long FamousPersonId);
+        Task<FamousPersonModel> GetFamousPersonById(long famousPersonId);
 
         Task<long> CreateFamousPerson(CreateFamousPersonRequest createFamousPersonRequest);
 
-        Task UpdateFamousPerson(long famouspersonId, UpdateFamousPersonRequest updateFamousPersonRequest);
+        Task UpdateFamousPerson(long famousPersonId, UpdateFamousPersonRequest updateFamousPersonRequest);
 
-       Task DeleteFamousPerson(long famouspersonId);
+       Task DeleteFamousPerson(long famousPersonId);
     }
 
     public partial class FamousPersonService
@@ -35,49 +35,49 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             _mapper = mapper.ConfigurationProvider;
         }
 
-        public async Task<FamousPersonModel> GetFamousPersonById(long famouspersonId)
+        public async Task<FamousPersonModel> GetFamousPersonById(long famousPersonId)
         {
-            var FamousPersonModel = await Get().Where(fp => fp.Id == famouspersonId).ProjectTo<FamousPersonModel>(_mapper).FirstOrDefaultAsync();
-            if (FamousPersonModel == null)
+            var famousPersonModel = await Get().Where(fp => fp.Id == famousPersonId).ProjectTo<FamousPersonModel>(_mapper).FirstOrDefaultAsync();
+            if (famousPersonModel == null)
             {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot find any famous person matches with id = ${famouspersonId}");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any famous person matches with id = {famousPersonId}");
             }
-            return FamousPersonModel;
+            return famousPersonModel;
         }
 
         public async Task<long> CreateFamousPerson(CreateFamousPersonRequest createFamousPersonRequest)
         {
             var mapper = _mapper.CreateMapper();
-            var famousperson = mapper.Map<FamousPerson>(createFamousPersonRequest);
-            await CreateAsyn(famousperson);
-            return famousperson.Id;
+            var famousPerson = mapper.Map<FamousPerson>(createFamousPersonRequest);
+            await CreateAsyn(famousPerson);
+            return famousPerson.Id;
         }
 
-        public async Task UpdateFamousPerson(long famouspersonId, UpdateFamousPersonRequest updateFamousPersonRequest)
+        public async Task UpdateFamousPerson(long famousPersonId, UpdateFamousPersonRequest updateFamousPersonRequest)
         {
-           var famouspersonInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == famouspersonId);
-            if (famouspersonInDb == null)
+           var famousPersonInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == famousPersonId);
+            if (famousPersonInDb == null)
             {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot find any famous person matches with id = ${famouspersonId}");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any famous person matches with id = {famousPersonId}");
             }
 
             var mapper = _mapper.CreateMapper();
-            var famouspersonInRequest = mapper.Map<FamousPerson>(updateFamousPersonRequest);
+            var famousPersonInRequest = mapper.Map<FamousPerson>(updateFamousPersonRequest);
 
-            famouspersonInDb.Name = famouspersonInRequest.Name;
-            famouspersonInDb.Description = famouspersonInRequest.Description;
-            famouspersonInDb.Zodiac = famouspersonInRequest.Zodiac;
+            famousPersonInDb.Name = famousPersonInRequest.Name;
+            famousPersonInDb.Description = famousPersonInRequest.Description;
+            famousPersonInDb.Zodiac = famousPersonInRequest.Zodiac;
 
-            await UpdateAsyn(famouspersonInDb);
+            await UpdateAsyn(famousPersonInDb);
         }
 
-        public async Task DeleteFamousPerson(long famouspersonId)
+        public async Task DeleteFamousPerson(long famousPersonId)
         {
-            var categoryInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == famouspersonId);
+            var categoryInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == famousPersonId);
             if (categoryInDb == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
-                    $"Cannot find any category matches with id = {famouspersonId}");
+                    $"Cannot find any category matches with id = {famousPersonId}");
             }
 
             await DeleteAsyn(categoryInDb);

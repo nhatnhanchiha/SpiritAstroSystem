@@ -27,6 +27,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         User GetById(long id);
         LoginResponse LoginByPhone(LoginRequest loginRequest);
         Task<UserModels> GetDetailUser(long id);
+        Task<PublicUserModels> GetPublicDetailOfUserById(long userId);
         Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest);
         Task UpdateUser(long id, UpdateUserRequest updateUserRequest);
         Task DeleteUser(long id);
@@ -45,6 +46,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public User GetById(long id)
         {
             return this.Get(id);
+        }
+
+        public async Task<PublicUserModels> GetPublicDetailOfUserById(long userId)
+        {
+            var publicUserModel = await Get().ProjectTo<PublicUserModels>(_mapper).FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
+
+            if (publicUserModel == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any user matches with id = {userId}");
+            }
+
+            return publicUserModel;
         }
 
         public async Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest)

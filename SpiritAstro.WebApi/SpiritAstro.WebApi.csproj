@@ -21,7 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Resources" />
+      <None Update="Resources\rbac_model.conf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
