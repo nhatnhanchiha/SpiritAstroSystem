@@ -15,8 +15,8 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
         public static void ConfigFieldMapperModule(this IMapperConfigurationExpression mc)
         {
             mc.CreateMap<CreateFieldRequest, Field>();
-            mc.CreateMap<Category, FieldModel>().ReverseMap();
-            //mc.CreateMap<UpdateCategoryRequest, Category>();
+            mc.CreateMap<Field, FieldModel>().ReverseMap();
+            mc.CreateMap<UpdateFieldRequest, Field>();
         }
     }
 }

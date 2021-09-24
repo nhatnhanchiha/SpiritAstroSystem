@@ -1,6 +1,6 @@
 ﻿namespace SpiritAstro.BusinessTier.ViewModels.Field
 {
-    class FieldModel
+    public class FieldModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
