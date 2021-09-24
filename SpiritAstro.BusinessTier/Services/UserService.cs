@@ -31,6 +31,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest);
         Task UpdateUser(long id, UpdateUserRequest updateUserRequest);
         Task DeleteUser(long id);
+        Task IsAstrologer(long userId);
     }
     
     public partial class UserService
@@ -46,6 +47,15 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public User GetById(long id)
         {
             return this.Get(id);
+        }
+
+        public async Task IsAstrologer(long userId)
+        {
+            var astrologer = await Get().FirstOrDefaultAsync(u => u.Id == userId && u.UserRoles.Any(ur => ur.RoleId == "astrologer") && u.DeletedAt == null);
+            if (astrologer == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot found any astrologer matches with userId = {userId}");
+            }
         }
 
         public async Task<PublicUserModels> GetPublicDetailOfUserById(long userId)
