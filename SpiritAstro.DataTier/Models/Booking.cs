@@ -19,6 +19,7 @@ namespace SpiritAstro.DataTier.Models
         public DateTimeOffset EndTime { get; set; }
         public double? Rating { get; set; }
         public string Note { get; set; }
+        public int Status { get; set; }
 
         public virtual User Astrologer { get; set; }
         public virtual User Customer { get; set; }
