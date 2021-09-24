@@ -17,6 +17,7 @@ namespace SpiritAstro.WebApi.AppStart
                 mc.ConfigFamousPersonMapperModule();
                 mc.ConfigFieldMapperModule();
                 mc.ConfigBookingMapperModule();
+                mc.ConfigFollowMapperModule();
             });
             var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
