@@ -84,8 +84,14 @@ namespace SpiritAstro.WebApi.Controllers
         [HttpPut("{id:long}")]
         public async Task<IActionResult> UpdateUser(long id, [FromBody] UpdateUserRequest user)
         {
+            var claims = (CustomClaims)HttpContext.Items["claims"];
             try
             {
+                if (claims == null || claims.UserId != id)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Access denied !"));
+                }
+
                 await _userService.UpdateUser(id, user);
                 return Ok(MyResponse<object>.OkWithMessage("Updated success"));
             }
@@ -103,8 +109,13 @@ namespace SpiritAstro.WebApi.Controllers
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> DeleteUser(long id)
         {
+            var claims = (CustomClaims)HttpContext.Items["claims"];
             try
             {
+                if (claims == null)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Access denied !"));
+                }
                 await _userService.DeleteUser(id);
                 return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
             }
