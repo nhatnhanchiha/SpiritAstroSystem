@@ -9,16 +9,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FamousPersonController : ControllerBase
+    public class FamousPersonsController : ControllerBase
     {
         private readonly IFamousPersonService _famousPersonService;
 
-        public FamousPersonController(IFamousPersonService famousPersonService)
+        public FamousPersonsController(IFamousPersonService famousPersonService)
         {
             _famousPersonService = famousPersonService;
         }
@@ -43,6 +44,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewFamousPerson(
             [FromBody] CreateFamousPersonRequest createFamousPersonRequest)
         {

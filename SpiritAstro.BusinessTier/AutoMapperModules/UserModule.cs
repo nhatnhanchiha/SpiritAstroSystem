@@ -19,6 +19,7 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
             mc.CreateMap<DetailUserRequest, User>();
             mc.CreateMap<User, UserModels>().ReverseMap();
             mc.CreateMap<UpdateUserRequest, User>();
+            mc.CreateMap<User, PublicUserModels>();
         }
     }
 }

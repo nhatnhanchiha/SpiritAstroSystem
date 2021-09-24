@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.User;
 using SpiritAstro.BusinessTier.Responses;
@@ -57,8 +58,15 @@ namespace SpiritAstro.WebApi.Controllers
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GerDetailUser(long id)
         {
+            var claims = (CustomClaims) HttpContext.Items["claims"];
+            
             try
             {
+                if (claims == null || claims.UserId != id)
+                {
+                    var publicUserModel = await _userService.GetPublicDetailOfUserById(id);
+                    return Ok(MyResponse<PublicUserModels>.OkWithData(publicUserModel));
+                }
                 var userModel = await _userService.GetDetailUser(id);
                 return Ok(MyResponse<UserModels>.OkWithData(userModel));
             }
