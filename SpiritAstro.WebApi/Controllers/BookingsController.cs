@@ -27,7 +27,9 @@ namespace SpiritAstro.WebApi.Controllers
             _userService = userService;
         }
 
+        // Chả biết để làm gì
         [HttpGet("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetBookingById(long id)
         {
             try

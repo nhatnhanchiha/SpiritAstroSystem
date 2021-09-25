@@ -20,7 +20,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<BookingModel> GetBookingById(long bookingId);
         Task<long> CreateBooking(long customerId, CreateBookingRequest createBookingRequest);
     }
-    
+
     public partial class BookingService
     {
         private readonly IConfigurationProvider _mapper;
@@ -51,13 +51,20 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             if (booking.StartTime < DateTimeOffset.Now || booking.StartTime >= booking.EndTime)
             {
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest,
-                    $"Invalid time");
+                    "Invalid time");
             }
 
             if ((booking.EndTime - booking.StartTime).TotalMinutes < 10)
             {
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest,
-                    $"During time must be greater than 10 minutes");
+                    "During time must be greater than 10 minutes");
+            }
+
+            var otherBooking = await Get().FirstOrDefaultAsync(b => b.CustomerId == customerId && (b.StartTime <= booking.StartTime && b.EndTime >= booking.StartTime || b.StartTime <= booking.EndTime && b.EndTime >= booking.EndTime));
+            if (otherBooking != null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest,
+                    "You has a booking in this time, please choose another time!");
             }
 
             booking.CustomerId = customerId;

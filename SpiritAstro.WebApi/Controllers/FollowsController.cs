@@ -70,6 +70,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("getFollowers")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetFollower(int page, int limit)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
