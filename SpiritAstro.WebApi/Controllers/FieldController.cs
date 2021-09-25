@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Field;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Field;
+using SpiritAstro.WebApi.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +25,18 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewField([FromBody] CreateFieldRequest createFieldRequest)
         {
+            var claims = (CustomClaims)HttpContext.Items["claims"];
+
             try
             {
+                if (claims == null)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Access denied !"));
+                }
+
                 var fieldId = await _fieldService.CreateField(createFieldRequest);
                 return Ok(MyResponse<long>.OkWithDetail(fieldId,
                     $"Created success field with id = {fieldId}"));
@@ -59,8 +69,15 @@ namespace SpiritAstro.WebApi.Controllers
         [HttpPut("{id:long}")]
         public async Task<IActionResult> UpdateField(long id, [FromBody] UpdateFieldRequest updateFieldRequest)
         {
+            //var claims = (CustomClaims)HttpContext.Items["claims"];
+
             try
             {
+                //if (claims == null || claims.Field)
+                //{
+                //    return Ok(MyResponse<object>.FailWithMessage("Access denied !"));
+                //}
+
                 await _fieldService.UpdateField(id, updateFieldRequest);
                 return Ok(MyResponse<object>.OkWithMessage("Updated success"));
             }
