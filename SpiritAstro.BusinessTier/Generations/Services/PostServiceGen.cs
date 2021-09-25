@@ -7,15 +7,11 @@
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Generations.Repositories;
-using System.Threading.Tasks;
-using SpiritAstro.BusinessTier.Requests.Post;
-
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
-
-    public partial interface IPostService : IBaseService<Post>
+    
+    public partial interface IPostService:IBaseService<Post>
     {
-        
     }
     public partial class PostService:BaseService<Post>,IPostService
     {
