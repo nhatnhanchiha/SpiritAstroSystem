@@ -13,11 +13,11 @@ namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerZodiacController : ControllerBase
+    public class CustomerZodiacsController : ControllerBase
     {
         private readonly ICustomerZodiacService _customerZodiacService;
 
-        public CustomerZodiacController(ICustomerZodiacService customerZodiacService)
+        public CustomerZodiacsController(ICustomerZodiacService customerZodiacService)
         {
             _customerZodiacService = customerZodiacService;
         }
