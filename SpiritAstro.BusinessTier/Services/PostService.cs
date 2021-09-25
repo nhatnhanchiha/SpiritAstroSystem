@@ -38,7 +38,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             var postModel = await Get().Where(p => p.Id == postId).ProjectTo<PostModel>(_mapper).FirstOrDefaultAsync();
             if (postModel == null)
             {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any famous person matches with id = {postId}");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any post matches with id = {postId}");
             }
             return postModel;
         }
@@ -75,7 +75,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             if (postInDb == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
-                    $"Cannot find any category matches with id = {postId}");
+                    $"Cannot find any post matches with id = {postId}");
             }
 
             postInDb.DeletedAt = DateTimeOffset.Now;
