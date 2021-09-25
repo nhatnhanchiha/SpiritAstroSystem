@@ -13,15 +13,16 @@ namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController : ControllerBase
+    public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
-        public PostController(IPostService postService)
+
+        public PostsController(IPostService postService)
         {
             _postService = postService;
         }
 
-        [HttpGet("id:long")]
+        [HttpGet("{id:long}")]
         public async Task<IActionResult> GetPostById(long id)
         {
             try
@@ -38,7 +39,6 @@ namespace SpiritAstro.WebApi.Controllers
 
                 return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
             }
-
         }
 
         [HttpPost]
@@ -58,8 +58,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
-        public async Task<IActionResult> UpdatePost(long id,
-    [FromBody] UpdatePostRequest updatePostRequest)
+        public async Task<IActionResult> UpdatePost(long id, [FromBody] UpdatePostRequest updatePostRequest)
         {
             try
             {
@@ -76,6 +75,7 @@ namespace SpiritAstro.WebApi.Controllers
                 return Ok(MyResponse<object>.FailWithMessage("Updated fail. " + e.Error.Message));
             }
         }
+
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> DeletePost(long id)
         {
@@ -94,6 +94,5 @@ namespace SpiritAstro.WebApi.Controllers
                 return Ok(MyResponse<object>.FailWithMessage("Deleted fail. " + e.Error.Message));
             }
         }
-
     }
 }

@@ -47,6 +47,10 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         {
             var mapper = _mapper.CreateMapper();
             var post = mapper.Map<Post>(createPostRequest);
+            
+            post.CreatedAt = DateTimeOffset.Now;
+            post.UpdatedAt = DateTimeOffset.Now;
+            
             await CreateAsyn(post);
             return post.Id;
         }
@@ -65,6 +69,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             postInDb.Title = postInRequest.Title;
             postInDb.Content = postInRequest.Content;
             postInDb.CategoryId = postInRequest.CategoryId;
+            postInDb.UpdatedAt = DateTimeOffset.Now;
 
             await UpdateAsyn(postInDb);
         }
