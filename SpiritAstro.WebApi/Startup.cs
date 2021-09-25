@@ -35,6 +35,8 @@ namespace SpiritAstro.WebApi
 
             services.ConfigureJsonFormatServices();
             
+            services.InitFirebase();
+            
             services.InitCasbin();
             
             services.InitializerDI();

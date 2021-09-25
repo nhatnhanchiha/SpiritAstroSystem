@@ -34,12 +34,11 @@ namespace SpiritAstro.WebApi.Controllers
             }
             catch (ErrorResponse e)
             {
-                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                return e.Error.Code switch
                 {
-                    return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
-                }
-
-                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+                    (int)HttpStatusCode.NotFound => Ok(MyResponse<object>.FailWithMessage(e.Error.Message)),
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
             }
         }
 

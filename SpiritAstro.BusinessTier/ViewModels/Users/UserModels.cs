@@ -4,7 +4,7 @@ using System;
 
 namespace SpiritAstro.BusinessTier.ViewModels.Users
 {
-    public class UserModels
+    public class UserModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -15,9 +15,10 @@ namespace SpiritAstro.BusinessTier.ViewModels.Users
         public double LatitudeOfBirth { get; set; }
         public double LongitudeOfBirth { get; set; }
         public DateTime TimeOfBirth { get; set; }
+        public DateTimeOffset? DeletedAt { get; set; }
     }
 
-    public class PublicUserModels
+    public class PublicUserModel
     {
         public long Id { get; set; }
         public string Name { get; set; }

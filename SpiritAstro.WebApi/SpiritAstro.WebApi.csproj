@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="FirebaseAdmin" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.9" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
@@ -24,6 +25,12 @@
       <None Update="Resources\rbac_model.conf">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="Resources\spiritastro-2bfba-firebase-adminsdk-qk1a8-2c46bb7e8a.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
