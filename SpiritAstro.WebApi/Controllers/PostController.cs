@@ -1,55 +1,55 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SpiritAstro.BusinessTier.Generations.Services;
+using SpiritAstro.BusinessTier.Requests.Post;
+using SpiritAstro.BusinessTier.Responses;
+using SpiritAstro.BusinessTier.ViewModels.Post;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SpiritAstro.BusinessTier.Generations.Services;
-using SpiritAstro.BusinessTier.Requests.Category;
-using SpiritAstro.BusinessTier.Responses;
-using SpiritAstro.BusinessTier.ViewModels.Category;
-using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class PostsController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly IPostService _postService;
 
-        public CategoriesController(ICategoryService categoryService)
+        public PostsController(IPostService postService)
         {
-            _categoryService = categoryService;
+            _postService = postService;
         }
 
         [HttpGet("{id:long}")]
-        public async Task<IActionResult> GetCategoryById(long id)
+        public async Task<IActionResult> GetPostById(long id)
         {
             try
             {
-                var categoryModel = await _categoryService.GetCategoryById(id);
-                return Ok(MyResponse<CategoryModel>.OkWithData(categoryModel));
+                var postModel = await _postService.GetPostById(id);
+                return Ok(MyResponse<PostModel>.OkWithData(postModel));
             }
             catch (ErrorResponse e)
             {
-                return e.Error.Code switch
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
                 {
-                    (int)HttpStatusCode.NotFound => Ok(MyResponse<object>.FailWithMessage(e.Error.Message)),
-                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
-                };
+                    return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNewCategory([FromBody] CreateCategoryRequest createCategoryRequest)
+        public async Task<IActionResult> CreateNewPost(
+            [FromBody] CreatePostRequest createPostRequest)
         {
             try
             {
-                var categoryId = await _categoryService.CreateCategory(createCategoryRequest);
-                return Ok(MyResponse<long>.OkWithDetail(categoryId,
-                    $"Created success category with id = {categoryId}"));
+                var postId = await _postService.CreatePost(createPostRequest);
+                return Ok(MyResponse<long>.OkWithDetail(postId,
+                    $"Created success post with id = {postId}"));
             }
             catch (ErrorResponse e)
             {
@@ -57,13 +57,12 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
-
         [HttpPut("{id:long}")]
-        public async Task<IActionResult> UpdateCategory(long id, [FromBody] UpdateCategoryRequest updateCategoryRequest)
+        public async Task<IActionResult> UpdatePost(long id, [FromBody] UpdatePostRequest updatePostRequest)
         {
             try
             {
-                await _categoryService.UpdateCategory(id, updateCategoryRequest);
+                await _postService.UpdatePost(id, updatePostRequest);
                 return Ok(MyResponse<object>.OkWithMessage("Updated success"));
             }
             catch (ErrorResponse e)
@@ -78,11 +77,11 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
-        public async Task<IActionResult> DeleteCategory(long id)
+        public async Task<IActionResult> DeletePost(long id)
         {
             try
             {
-                await _categoryService.DeleteCategory(id);
+                await _postService.DeletePost(id);
                 return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
             }
             catch (ErrorResponse e)

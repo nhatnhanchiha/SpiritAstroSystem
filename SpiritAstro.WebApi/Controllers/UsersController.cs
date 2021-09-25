@@ -65,10 +65,10 @@ namespace SpiritAstro.WebApi.Controllers
                 if (claims == null || claims.UserId != id)
                 {
                     var publicUserModel = await _userService.GetPublicDetailOfUserById(id);
-                    return Ok(MyResponse<PublicUserModels>.OkWithData(publicUserModel));
+                    return Ok(MyResponse<PublicUserModel>.OkWithData(publicUserModel));
                 }
                 var userModel = await _userService.GetDetailUser(id);
-                return Ok(MyResponse<UserModels>.OkWithData(userModel));
+                return Ok(MyResponse<UserModel>.OkWithData(userModel));
             }
             catch (ErrorResponse e)
             {
