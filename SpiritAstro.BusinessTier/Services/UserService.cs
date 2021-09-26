@@ -19,6 +19,7 @@ using SpiritAstro.BusinessTier.ViewModels.Users;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
+using SpiritAstro.BusinessTier.Commons.Utils;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
@@ -31,12 +32,15 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest);
         Task UpdateUser(long id, UpdateUserRequest updateUserRequest);
         Task DeleteUser(long id);
+        Task<PageResult<UserModels>> GetListUser(UserModels userFilter, int page, int limit);
     }
     
     public partial class UserService
     {
         private readonly IConfiguration _configuration;
         private readonly AutoMapper.IConfigurationProvider _mapper;
+        private const int DefaultPaging = 10;
+        private const int LimitPaging = 50;
 
         public UserService(IUnitOfWork unitOfWork,IUserRepository repository, IConfiguration configuration, IMapper mapper):base(unitOfWork,repository)
         {
@@ -120,6 +124,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 ExpiresAt = ((long)new DateTime(customClaims.Exp).ToUniversalTime().Subtract(
                     new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 ).TotalSeconds) * 1000,
+            };
+        }
+
+        public async Task<PageResult<UserModels>> GetListUser(UserModels userFilter, int page, int limit)
+        {
+            var (total, queryable) = Get().ProjectTo<UserModels>(_mapper).DynamicFilter(userFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            return new PageResult<UserModels>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Size = limit,
+                Total = total,
             };
         }
 

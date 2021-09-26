@@ -55,6 +55,23 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetListUser([FromQuery] UserModels userFilter, int page, int limit)
+        {
+            try
+            {
+                var userModels = await _userService.GetListUser(userFilter, page, limit);
+                return Ok(MyResponse<PageResult<UserModels>>.OkWithData(userModels));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GerDetailUser(long id)
         {

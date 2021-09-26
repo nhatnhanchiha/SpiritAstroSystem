@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using SpiritAstro.BusinessTier.Commons.Utils;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.Field;
 using SpiritAstro.BusinessTier.Responses;
@@ -20,15 +21,30 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<FieldModel> GetFieldById(long fieldId);
         Task UpdateField(long fieldId, UpdateFieldRequest updateFieldRequest);
         Task DeleteField(long fieldId);
+        Task<PageResult<FieldModel>> GetListField(FieldModel fieldFilter, int page, int limit);
     }
     public partial class FieldService
     {
         private readonly IConfigurationProvider _mapper;
+        private const int DefaultPaging = 10;
+        private const int LimitPaging = 50;
 
         public FieldService(IUnitOfWork unitOfWork, IFieldRepository repository, IMapper mapper) : base(
             unitOfWork, repository)
         {
             _mapper = mapper.ConfigurationProvider;
+        }
+
+        public async Task<PageResult<FieldModel>> GetListField(FieldModel fieldFilter, int page, int limit)
+        {
+            var (total, queryable) = Get().ProjectTo<FieldModel>(_mapper).DynamicFilter(fieldFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            return new PageResult<FieldModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Size = limit,
+                Total = total,
+            };
         }
 
         public async Task<long> CreateField(CreateFieldRequest createFieldRequest)

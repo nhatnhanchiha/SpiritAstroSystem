@@ -24,6 +24,23 @@ namespace SpiritAstro.WebApi.Controllers
             _fieldService = fieldService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetListField([FromQuery] FieldModel fieldFilter, int page, int limit)
+        {
+            try
+            {
+                var fieldModels = await _fieldService.GetListField(fieldFilter, page, limit);
+                return Ok(MyResponse<PageResult<FieldModel>>.OkWithData(fieldModels));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
         [HttpPost]
         [CasbinAuthorize]
         public async Task<IActionResult> CreateNewField([FromBody] CreateFieldRequest createFieldRequest)
