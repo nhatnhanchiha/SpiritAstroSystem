@@ -4,7 +4,6 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Field;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Field;
-using SpiritAstro.WebApi.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +41,6 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
-        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewField([FromBody] CreateFieldRequest createFieldRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];

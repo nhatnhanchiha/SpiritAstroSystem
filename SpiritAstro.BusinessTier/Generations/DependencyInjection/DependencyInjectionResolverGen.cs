@@ -20,14 +20,17 @@ namespace SpiritAstro.BusinessTier.Generations.DependencyInjection
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<DbContext, SpiritAstroContext>();
         
+            services.AddScoped<IAstrologerService, AstrologerService>();
+            services.AddScoped<IAstrologerRepository, AstrologerRepository>();
+        
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IBookingRepository, BookingRepository>();
         
-            services.AddScoped<ICasbinRuleService, CasbinRuleService>();
-            services.AddScoped<ICasbinRuleRepository, CasbinRuleRepository>();
-        
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+        
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
         
             services.AddScoped<ICustomerZodiacService, CustomerZodiacService>();
             services.AddScoped<ICustomerZodiacRepository, CustomerZodiacRepository>();
@@ -62,17 +65,8 @@ namespace SpiritAstro.BusinessTier.Generations.DependencyInjection
             services.AddScoped<IPriceTableService, PriceTableService>();
             services.AddScoped<IPriceTableRepository, PriceTableRepository>();
         
-            services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-        
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
-        
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserRepository, UserRepository>();
-        
-            services.AddScoped<IUserRoleService, UserRoleService>();
-            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
         
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<IWalletRepository, WalletRepository>();

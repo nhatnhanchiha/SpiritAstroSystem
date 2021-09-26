@@ -13,13 +13,14 @@ namespace SpiritAstro.WebApi.AppStart
             {
                 mc.AddProfile(new AutoMapperResolver());
                 mc.ConfigCategoryMapperModule();
-                mc.ConfigUserMapperModule();
                 mc.ConfigFamousPersonMapperModule();
                 mc.ConfigFieldMapperModule();
                 mc.ConfigCustomerZodiacMapperModule();
                 mc.ConfigPostMapperModule();
                 mc.ConfigBookingMapperModule();
+                mc.ConfigAstrologerMapperModule();
                 mc.ConfigFollowMapperModule();
+                mc.ConfigCustomerMapperModule();
             });
             var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

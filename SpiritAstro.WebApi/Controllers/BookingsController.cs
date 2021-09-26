@@ -10,7 +10,6 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Booking;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Booking;
-using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -19,17 +18,14 @@ namespace SpiritAstro.WebApi.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
-        private readonly IUserService _userService;
 
-        public BookingsController(IBookingService bookingService, IUserService userService)
+        public BookingsController(IBookingService bookingService)
         {
             _bookingService = bookingService;
-            _userService = userService;
         }
 
         // Chả biết để làm gì
         [HttpGet("{id:long}")]
-        [CasbinAuthorize]
         public async Task<IActionResult> GetBookingById(long id)
         {
             try
@@ -48,15 +44,11 @@ namespace SpiritAstro.WebApi.Controllers
         }
         
         [HttpPost]
-        [CasbinAuthorize]
         public async Task<IActionResult> CreateBooking(CreateBookingRequest createBookingRequest)
         {
-            var claims = (CustomClaims)HttpContext.Items["claims"];
-
             try
             {
-                await _userService.IsAstrologer(createBookingRequest.AstrologerId);
-                var bookingId = await _bookingService.CreateBooking(claims!.UserId, createBookingRequest);
+                var bookingId = await _bookingService.CreateBooking(createBookingRequest);
                 return Ok(MyResponse<long>.OkWithDetail(bookingId, $"Created success with bookingId = {bookingId}"));
             }
             catch (ErrorResponse e)

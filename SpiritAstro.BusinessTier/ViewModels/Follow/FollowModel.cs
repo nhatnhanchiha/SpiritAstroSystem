@@ -1,4 +1,6 @@
-﻿using SpiritAstro.BusinessTier.ViewModels.Users;
+﻿using SpiritAstro.BusinessTier.ViewModels.Astrologer;
+using SpiritAstro.BusinessTier.ViewModels.Customer;
+using SpiritAstro.BusinessTier.ViewModels.Users;
 
 namespace SpiritAstro.BusinessTier.ViewModels.Follow
 {
@@ -12,13 +14,13 @@ namespace SpiritAstro.BusinessTier.ViewModels.Follow
     {
         public long AstrologerId { get; set; }
         public long CustomerId { get; set; }
-        public PublicUserModel Astrologer { get; set; }
+        public PublicAstrologerModel Astrologer { get; set; }
     }
 
     public class FollowWithCustomer
     {
         public long AstrologerId { get; set; }
         public long CustomerId { get; set; }
-        public PublicUserModel Customer { get; set; }
+        public PublicCustomerModel Customer { get; set; }
     }
 }

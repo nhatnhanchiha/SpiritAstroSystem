@@ -21,8 +21,8 @@ namespace SpiritAstro.DataTier.Models
         public string Note { get; set; }
         public int Status { get; set; }
 
-        public virtual User Astrologer { get; set; }
-        public virtual User Customer { get; set; }
+        public virtual Astrologer Astrologer { get; set; }
+        public virtual Customer Customer { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
     }
 }

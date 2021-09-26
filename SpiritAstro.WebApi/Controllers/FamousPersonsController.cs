@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -61,7 +60,6 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
-        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewFamousPerson(
             [FromBody] CreateFamousPersonRequest createFamousPersonRequest)
         {
@@ -78,7 +76,6 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
-        [CasbinAuthorize]
         public async Task<IActionResult> UpdateFamousPerson(long id,
             [FromBody] UpdateFamousPersonRequest updateCategoryRequest)
         {
@@ -99,7 +96,6 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
-        [CasbinAuthorize]
         public async Task<IActionResult> DeleteFamousPerson(long id)
         {
             try

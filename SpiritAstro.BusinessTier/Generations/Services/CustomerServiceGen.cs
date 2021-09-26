@@ -10,11 +10,11 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
-    public partial interface IUserRoleService:IBaseService<UserRole>
+    public partial interface ICustomerService:IBaseService<Customer>
     {
     }
-    public partial class UserRoleService:BaseService<UserRole>,IUserRoleService
+    public partial class CustomerService:BaseService<Customer>,ICustomerService
     {
-        public UserRoleService(IUnitOfWork unitOfWork,IUserRoleRepository repository):base(unitOfWork,repository){}
+        public CustomerService(IUnitOfWork unitOfWork,ICustomerRepository repository):base(unitOfWork,repository){}
     }
 }

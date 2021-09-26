@@ -11,7 +11,7 @@ namespace SpiritAstro.DataTier.Models
         public long FieldId { get; set; }
         public long Exp { get; set; }
 
-        public virtual User Astrologer { get; set; }
+        public virtual Astrologer Astrologer { get; set; }
         public virtual Field Field { get; set; }
     }
 }

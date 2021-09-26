@@ -22,12 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Resources\rbac_model.conf">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Update="Resources\spiritastro-2bfba-firebase-adminsdk-qk1a8-2c46bb7e8a.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

@@ -12,7 +12,7 @@ namespace SpiritAstro.DataTier.Models
         public int ZodiacId { get; set; }
         public int Type { get; set; }
 
-        public virtual User Customer { get; set; }
+        public virtual Customer Customer { get; set; }
         public virtual Zodiac Zodiac { get; set; }
     }
 }

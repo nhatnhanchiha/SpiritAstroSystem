@@ -9,6 +9,7 @@ using SpiritAstro.BusinessTier.Commons.Enums.Booking;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.Booking;
 using SpiritAstro.BusinessTier.Responses;
+using SpiritAstro.BusinessTier.Services;
 using SpiritAstro.BusinessTier.ViewModels.Booking;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
@@ -18,16 +19,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial interface IBookingService
     {
         Task<BookingModel> GetBookingById(long bookingId);
-        Task<long> CreateBooking(long customerId, CreateBookingRequest createBookingRequest);
+        Task<long> CreateBooking(CreateBookingRequest createBookingRequest);
     }
 
     public partial class BookingService
     {
         private readonly IConfigurationProvider _mapper;
+        private readonly IAccountService _accountService;
 
-        public BookingService(IUnitOfWork unitOfWork, IBookingRepository repository, IMapper mapper) : base(unitOfWork,
+        public BookingService(IUnitOfWork unitOfWork, IBookingRepository repository, IMapper mapper, IAccountService accountService) : base(unitOfWork,
             repository)
         {
+            _accountService = accountService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -44,7 +47,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             return bookingModel;
         }
 
-        public async Task<long> CreateBooking(long customerId, CreateBookingRequest createBookingRequest)
+        public async Task<long> CreateBooking(CreateBookingRequest createBookingRequest)
         {
             var mapper = _mapper.CreateMapper();
             var booking = mapper.Map<Booking>(createBookingRequest);
@@ -59,6 +62,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest,
                     "During time must be greater than 10 minutes");
             }
+            
+            var customerId = _accountService.GetCustomerId();
 
             var otherBooking = await Get().FirstOrDefaultAsync(b => b.CustomerId == customerId && (b.StartTime <= booking.StartTime && b.EndTime >= booking.StartTime || b.StartTime <= booking.EndTime && b.EndTime >= booking.EndTime));
             if (otherBooking != null)

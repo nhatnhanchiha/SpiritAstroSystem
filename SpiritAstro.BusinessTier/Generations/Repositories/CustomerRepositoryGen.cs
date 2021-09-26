@@ -9,12 +9,12 @@ using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 namespace SpiritAstro.BusinessTier.Generations.Repositories
 {
-    public partial interface IUserRoleRepository :IBaseRepository<UserRole>
+    public partial interface ICustomerRepository :IBaseRepository<Customer>
     {
     }
-    public partial class UserRoleRepository :BaseRepository<UserRole>, IUserRoleRepository
+    public partial class CustomerRepository :BaseRepository<Customer>, ICustomerRepository
     {
-         public UserRoleRepository(DbContext dbContext) : base(dbContext)
+         public CustomerRepository(DbContext dbContext) : base(dbContext)
          {
          }
     }

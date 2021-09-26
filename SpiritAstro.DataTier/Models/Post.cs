@@ -21,7 +21,9 @@ namespace SpiritAstro.DataTier.Models
         public DateTimeOffset? UpdatedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
         public long CategoryId { get; set; }
+        public long AstrologerId { get; set; }
 
+        public virtual Astrologer Astrologer { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<PostPlanet> PostPlanets { get; set; }
         public virtual ICollection<PostZodiac> PostZodiacs { get; set; }

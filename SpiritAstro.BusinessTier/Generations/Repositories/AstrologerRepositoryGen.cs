@@ -9,12 +9,12 @@ using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 namespace SpiritAstro.BusinessTier.Generations.Repositories
 {
-    public partial interface IRoleRepository :IBaseRepository<Role>
+    public partial interface IAstrologerRepository :IBaseRepository<Astrologer>
     {
     }
-    public partial class RoleRepository :BaseRepository<Role>, IRoleRepository
+    public partial class AstrologerRepository :BaseRepository<Astrologer>, IAstrologerRepository
     {
-         public RoleRepository(DbContext dbContext) : base(dbContext)
+         public AstrologerRepository(DbContext dbContext) : base(dbContext)
          {
          }
     }

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using SpiritAstro.BusinessTier.Services;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
@@ -28,10 +29,13 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         private readonly IConfigurationProvider _mapper;
         private const int DefaultPaging = 10;
         private const int LimitPaging = 50;
+        private readonly IAccountService _accountService;
+        
 
-        public CustomerZodiacService(IUnitOfWork unitOfWork, ICustomerZodiacRepository repository, IMapper mapper) : base(
+        public CustomerZodiacService(IUnitOfWork unitOfWork, ICustomerZodiacRepository repository, IMapper mapper, IAccountService accountService) : base(
             unitOfWork, repository)
         {
+            _accountService = accountService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -49,8 +53,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task<long> CreateCustomerZodiac(CustomerZodiacRequest customerZodiacRequest)
         {
+            var customerId = _accountService.GetCustomerId();
+            
+            
             var mapper = _mapper.CreateMapper();
             var customerZodiac = mapper.Map<CustomerZodiac>(customerZodiacRequest);
+
+            customerZodiac.CustomerId = customerId;
+            
             await CreateAsyn(customerZodiac);
             return customerZodiac.Id;
         }

@@ -10,7 +10,6 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Follow;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Follow;
-using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -19,23 +18,19 @@ namespace SpiritAstro.WebApi.Controllers
     public class FollowsController : ControllerBase
     {
         private readonly IFollowService _followService;
-        private readonly IUserService _userService;
 
-        public FollowsController(IFollowService followService, IUserService userService)
+        public FollowsController(IFollowService followService)
         {
             _followService = followService;
-            _userService = userService;
         }
 
         [HttpPost]
-        [CasbinAuthorize]
         public async Task<IActionResult> Follow([FromBody] FollowRequest followRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
             try
             {
-                await _userService.IsAstrologer(followRequest.AstrologerId);
-                await _followService.Follow(claims!.UserId, followRequest.AstrologerId);
+                await _followService.Follow(followRequest.AstrologerId);
                 return Ok(MyResponse<object>.OkWithMessage("Followed success"));
             }
             catch (ErrorResponse e)
@@ -49,15 +44,14 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
-        [HttpGet("getFollowings")]
-        [CasbinAuthorize]
+        [HttpGet("followings")]
         public async Task<IActionResult> GetFollowing(int page, int limit)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
 
             try
             {
-                var follows = await _followService.GetFollowings(claims!.UserId, page, limit);
+                var follows = await _followService.GetFollowings(page, limit);
                 return Ok(MyResponse<PageResult<FollowWithAstrologer>>.OkWithData(follows));
             }
             catch (ErrorResponse e)
@@ -69,15 +63,14 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
-        [HttpGet("getFollowers")]
-        [CasbinAuthorize]
+        [HttpGet("followers")]
         public async Task<IActionResult> GetFollower(int page, int limit)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
 
             try
             {
-                var follows = await _followService.GetFollowers(claims!.UserId, page, limit);
+                var follows = await _followService.GetFollowers(page, limit);
                 return Ok(MyResponse<PageResult<FollowWithCustomer>>.OkWithData(follows));
             }
             catch (ErrorResponse e)

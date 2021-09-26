@@ -16,6 +16,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using SpiritAstro.BusinessTier.Commons.Utils;
+using SpiritAstro.BusinessTier.Services;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
@@ -33,8 +34,10 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         private readonly IConfigurationProvider _mapper;
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
-        public PostService(IUnitOfWork unitOfWork, IPostRepository repository, IMapper mapper) : base(unitOfWork, repository)
+        private readonly IAccountService _accountService;
+        public PostService(IUnitOfWork unitOfWork, IPostRepository repository, IMapper mapper, IAccountService accountService) : base(unitOfWork, repository)
         {
+            _accountService = accountService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -66,6 +69,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         {
             var mapper = _mapper.CreateMapper();
             var post = mapper.Map<Post>(createPostRequest);
+
+            var astrologerId = _accountService.GetAstrologerId();
+            post.AstrologerId = astrologerId;
             
             post.CreatedAt = DateTimeOffset.Now;
             post.UpdatedAt = DateTimeOffset.Now;
@@ -85,6 +91,13 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             var mapper = _mapper.CreateMapper();
             var postInRequest = mapper.Map<Post>(updatePostRequest);
 
+            var astrologerId = _accountService.GetAstrologerId();
+
+            if (astrologerId != postInDb.AstrologerId)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Insufficient permissions");
+            }
+
             postInDb.Title = postInRequest.Title;
             postInDb.Content = postInRequest.Content;
             postInDb.CategoryId = postInRequest.CategoryId;
@@ -96,6 +109,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public async Task DeletePost(long postId)
         {
             var postInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == postId);
+            
+            var astrologerId = _accountService.GetAstrologerId();
+
+            if (astrologerId != postInDb.AstrologerId)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Insufficient permissions");
+            }
+            
             if (postInDb == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,

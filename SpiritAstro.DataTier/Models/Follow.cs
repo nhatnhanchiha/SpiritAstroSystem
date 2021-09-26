@@ -10,7 +10,7 @@ namespace SpiritAstro.DataTier.Models
         public long AstrologerId { get; set; }
         public long CustomerId { get; set; }
 
-        public virtual User Astrologer { get; set; }
-        public virtual User Customer { get; set; }
+        public virtual Astrologer Astrologer { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

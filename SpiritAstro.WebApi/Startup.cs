@@ -13,9 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SpiritAstro.BusinessTier.Generations.DependencyInjection;
+using SpiritAstro.BusinessTier.Services;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.WebApi.AppStart;
-using SpiritAstro.WebApi.Middlewares;
 
 namespace SpiritAstro.WebApi
 {
@@ -37,11 +37,11 @@ namespace SpiritAstro.WebApi
             
             services.InitFirebase();
             
-            services.InitCasbin();
-            
             services.InitializerDI();
 
             services.ConfigureAutoMapperServices();
+
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddDbContext<SpiritAstroContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DbContext")));
@@ -65,8 +65,6 @@ namespace SpiritAstro.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
