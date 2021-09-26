@@ -40,7 +40,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             {
                 List = await queryable.ToListAsync(),
                 Page = page,
-                Size = limit,
+                Limit = limit,
                 Total = total
             };
         }
@@ -55,7 +55,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             {
                 List = await queryable.ToListAsync(),
                 Page = page,
-                Size = limit,
+                Limit = limit,
                 Total = total
             };
         }

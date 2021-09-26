@@ -24,6 +24,24 @@ namespace SpiritAstro.WebApi.Controllers
             _categoryService = categoryService;
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetListCategories([FromQuery]CategoryModel categoryFilter, int page, int limit)
+        {
+            try
+            {
+                var categoryModels = await _categoryService.GetListCategories(categoryFilter, page, limit);
+                return Ok(MyResponse<PageResult<CategoryModel>>.OkWithData(categoryModels));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetCategoryById(long id)
         {
