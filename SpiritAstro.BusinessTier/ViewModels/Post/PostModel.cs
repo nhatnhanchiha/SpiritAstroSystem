@@ -19,5 +19,6 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
         public DateTimeOffset? UpdatedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
         public long? CategoryId { get; set; }
+        public long? AstrologerId { get; set; }
     }
 }
