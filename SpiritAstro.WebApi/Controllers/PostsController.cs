@@ -22,6 +22,20 @@ namespace SpiritAstro.WebApi.Controllers
             _postService = postService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetPosts([FromQuery] PostModel postFilter, int page, int limit)
+        {
+            try
+            {
+                var posts = await _postService.GetPosts(postFilter, page, limit);
+                return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
+
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetPostById(long id)
         {

@@ -11,14 +11,17 @@ using SpiritAstro.DataTier.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using SpiritAstro.BusinessTier.Commons.Utils;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IPostService
     {
+        Task<PageResult<PostModel>> GetPosts(PostModel postFilter, int page, int limit);
         Task<PostModel> GetPostById(long postId);
         Task<long> CreatePost(CreatePostRequest createPostRequest);
         Task UpdatePost(long postId, UpdatePostRequest updatePostRequest);
@@ -28,11 +31,27 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial class PostService
     {
         private readonly IConfigurationProvider _mapper;
+        private const int DefaultPaging = 20;
+        private const int LimitPaging = 20;
         public PostService(IUnitOfWork unitOfWork, IPostRepository repository, IMapper mapper) : base(unitOfWork, repository)
         {
             _mapper = mapper.ConfigurationProvider;
         }
-        
+
+        public async Task<PageResult<PostModel>> GetPosts(PostModel postFilter, int page, int limit)
+        {
+            var (total, queryable) = Get().Where(p => p.DeletedAt == null).ProjectTo<PostModel>(_mapper)
+                .DynamicFilter(postFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+
+            return new PageResult<PostModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Limit = limit,
+                Total = total
+            };
+        }
+
         public async Task<PostModel> GetPostById(long postId)
         {
             var postModel = await Get().Where(p => p.Id == postId).ProjectTo<PostModel>(_mapper).FirstOrDefaultAsync();
