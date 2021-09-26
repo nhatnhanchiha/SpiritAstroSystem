@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
-#nullable disable
-
-namespace SpiritAstro.DataTier.Models
+namespace SpiritAstro.BusinessTier.ViewModels.Booking
 {
-    public partial class Booking
+    public class BookingModel
     {
-        public Booking()
-        {
-            Payments = new HashSet<Payment>();
-        }
-
         public long Id { get; set; }
         public long AstrologerId { get; set; }
         public long CustomerId { get; set; }
@@ -20,9 +12,5 @@ namespace SpiritAstro.DataTier.Models
         public double? Rating { get; set; }
         public string Note { get; set; }
         public int Status { get; set; }
-
-        public virtual User Astrologer { get; set; }
-        public virtual User Customer { get; set; }
-        public virtual ICollection<Payment> Payments { get; set; }
     }
 }

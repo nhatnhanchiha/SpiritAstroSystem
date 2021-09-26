@@ -33,6 +33,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task UpdateUser(long id, UpdateUserRequest updateUserRequest);
         Task DeleteUser(long id);
         Task<PageResult<UserModels>> GetListUser(UserModels userFilter, int page, int limit);
+        Task IsAstrologer(long userId);
     }
     
     public partial class UserService
@@ -52,9 +53,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             return this.Get(id);
         }
 
-        public async Task<PublicUserModels> GetPublicDetailOfUserById(long userId)
+        public async Task IsAstrologer(long userId)
         {
-            var publicUserModel = await Get().ProjectTo<PublicUserModels>(_mapper).FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
+            var astrologer = await Get().FirstOrDefaultAsync(u => u.Id == userId && u.UserRoles.Any(ur => ur.RoleId == "astrologer") && u.DeletedAt == null);
+            if (astrologer == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot found any astrologer matches with userId = {userId}");
+            }
+        }
+
+        public async Task<PublicUserModel> GetPublicDetailOfUserById(long userId)
+        {
+            var publicUserModel = await Get().ProjectTo<PublicUserModel>(_mapper).FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
 
             if (publicUserModel == null)
             {
@@ -140,8 +150,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         }
 
         public async Task<UserModels> GetDetailUser(long id)
+        public async Task<UserModel> GetDetailUser(long id)
         {
-            var userModel = await Get().Where(u => u.Id == id).ProjectTo<UserModels>(_mapper).FirstOrDefaultAsync();
+            var userModel = await Get().Where(u => u.Id == id).ProjectTo<UserModel>(_mapper).FirstOrDefaultAsync();
             if (userModel == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,

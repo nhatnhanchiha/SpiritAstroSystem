@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.Configuration;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using SpiritAstro.BusinessTier.Commons.Utils;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.Category;
 using SpiritAstro.BusinessTier.Responses;
@@ -16,6 +17,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface ICategoryService
     {
+        Task<PageResult<CategoryModel>> GetListCategories(CategoryModel categoryFilter, int page, int limit);
         Task<CategoryModel> GetCategoryById(long categoryId);
         Task<long> CreateCategory(CreateCategoryRequest createCategoryRequest);
 
@@ -26,11 +28,26 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial class CategoryService
     {
         private readonly IConfigurationProvider _mapper;
+        private const int DefaultPaging = 10;
+        private const int LimitPaging = 50;
 
-        public CategoryService(IUnitOfWork unitOfWork, IFieldRepository repository, IMapper mapper) : base(
+        public CategoryService(IUnitOfWork unitOfWork, ICategoryRepository repository, IMapper mapper) : base(
             unitOfWork, repository)
         {
             _mapper = mapper.ConfigurationProvider;
+        }
+
+        public async Task<PageResult<CategoryModel>> GetListCategories(CategoryModel categoryFilter, int page, int limit)
+        {
+            var (total, queryable) = Get().ProjectTo<CategoryModel>(_mapper).DynamicFilter(categoryFilter)
+                .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            return new PageResult<CategoryModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Limit = limit,
+                Total = total
+            };
         }
 
         public async Task<CategoryModel> GetCategoryById(long categoryId)
