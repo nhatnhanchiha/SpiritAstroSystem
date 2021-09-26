@@ -27,12 +27,12 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     {
         User GetById(long id);
         LoginResponse LoginByPhone(LoginRequest loginRequest);
-        Task<UserModels> GetDetailUser(long id);
-        Task<PublicUserModels> GetPublicDetailOfUserById(long userId);
+        Task<UserModel> GetDetailUser(long id);
+        Task<PublicUserModel> GetPublicDetailOfUserById(long userId);
         Task<long> RegisterCustomer(RegisterCustomerRequest registerCustomerRequest);
         Task UpdateUser(long id, UpdateUserRequest updateUserRequest);
         Task DeleteUser(long id);
-        Task<PageResult<UserModels>> GetListUser(UserModels userFilter, int page, int limit);
+        Task<PageResult<UserModel>> GetListUser(UserModel userFilter, int page, int limit);
         Task IsAstrologer(long userId);
     }
     
@@ -137,19 +137,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             };
         }
 
-        public async Task<PageResult<UserModels>> GetListUser(UserModels userFilter, int page, int limit)
+        public async Task<PageResult<UserModel>> GetListUser(UserModel userFilter, int page, int limit)
         {
-            var (total, queryable) = Get().ProjectTo<UserModels>(_mapper).DynamicFilter(userFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
-            return new PageResult<UserModels>
+            var (total, queryable) = Get().ProjectTo<UserModel>(_mapper).DynamicFilter(userFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            return new PageResult<UserModel>
             {
                 List = await queryable.ToListAsync(),
                 Page = page,
-                Size = limit,
+                Limit = limit,
                 Total = total,
             };
         }
 
-        public async Task<UserModels> GetDetailUser(long id)
         public async Task<UserModel> GetDetailUser(long id)
         {
             var userModel = await Get().Where(u => u.Id == id).ProjectTo<UserModel>(_mapper).FirstOrDefaultAsync();

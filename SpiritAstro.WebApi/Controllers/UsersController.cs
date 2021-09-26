@@ -56,12 +56,12 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListUser([FromQuery] UserModels userFilter, int page, int limit)
+        public async Task<IActionResult> GetListUser([FromQuery] UserModel userFilter, int page, int limit)
         {
             try
             {
                 var userModels = await _userService.GetListUser(userFilter, page, limit);
-                return Ok(MyResponse<PageResult<UserModels>>.OkWithData(userModels));
+                return Ok(MyResponse<PageResult<UserModel>>.OkWithData(userModels));
             }
             catch (ErrorResponse e)
             {

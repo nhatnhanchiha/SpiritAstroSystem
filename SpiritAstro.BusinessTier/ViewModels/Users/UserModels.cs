@@ -1,11 +1,9 @@
-﻿
-
-using System;
+﻿using System;
 using SpiritAstro.BusinessTier.Commons.Attributes;
 
 namespace SpiritAstro.BusinessTier.ViewModels.Users
 {
-    public class UserModels
+    public class UserModel
     {
         public long? Id { get; set; }
         [String]
@@ -19,7 +17,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Users
         public DateTime? TimeOfBirth { get; set; }
     }
 
-    public class PublicUserModels
+    public class PublicUserModel
     {
         public long? Id { get; set; }
         public string Name { get; set; }
