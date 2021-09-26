@@ -1,12 +1,14 @@
 ﻿
 
 using System;
+using SpiritAstro.BusinessTier.Commons.Attributes;
 
 namespace SpiritAstro.BusinessTier.ViewModels.Users
 {
     public class UserModels
     {
         public long? Id { get; set; }
+        [String]
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int? StatusPayment { get; set; }

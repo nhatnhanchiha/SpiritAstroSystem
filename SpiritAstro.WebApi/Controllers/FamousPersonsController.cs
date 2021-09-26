@@ -25,12 +25,12 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListFamousPersons([FromQuery]FamousPersonModel famouspersonFilter, int page, int limit)
+        public async Task<IActionResult> GetListFamousPersons([FromQuery]FamousPersonModel famousPersonFilter, int page, int limit)
         {
             try
             {
-                var famouspersonModels = await _famousPersonService.GetListFamousPerson(famouspersonFilter, page, limit);
-                return Ok(MyResponse<PageResult<FamousPersonModel>>.OkWithData(famouspersonModels));
+                var famousPersonModels = await _famousPersonService.GetListFamousPerson(famousPersonFilter, page, limit);
+                return Ok(MyResponse<PageResult<FamousPersonModel>>.OkWithData(famousPersonModels));
             }
             catch (ErrorResponse e)
             {

@@ -15,11 +15,11 @@ namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FieldController : ControllerBase
+    public class FieldsController : ControllerBase
     {
         private readonly IFieldService _fieldService;
 
-        public FieldController(IFieldService fieldService)
+        public FieldsController(IFieldService fieldService)
         {
             _fieldService = fieldService;
         }

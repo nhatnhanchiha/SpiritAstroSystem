@@ -23,12 +23,12 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListCustomerZodiac([FromQuery] CustomerZodiacModel customerzodiacFilter, int page, int limit)
+        public async Task<IActionResult> GetListCustomerZodiac([FromQuery] CustomerZodiacModel customerZodiacFilter, int page, int limit)
         {
             try
             {
-                var customerzodiacModels = await _customerZodiacService.GetListCustomerZodiac(customerzodiacFilter, page, limit);
-                return Ok(MyResponse<PageResult<CustomerZodiacModel>>.OkWithData(customerzodiacModels));
+                var customerZodiacModels = await _customerZodiacService.GetListCustomerZodiac(customerZodiacFilter, page, limit);
+                return Ok(MyResponse<PageResult<CustomerZodiacModel>>.OkWithData(customerZodiacModels));
             }
             catch (ErrorResponse e)
             {
