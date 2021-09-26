@@ -2,6 +2,7 @@
 using AutoMapper.Configuration;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using SpiritAstro.BusinessTier.Commons.Utils;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.FamousPerson;
 using SpiritAstro.BusinessTier.Responses;
@@ -10,6 +11,7 @@ using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -19,6 +21,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IFamousPersonService
     {
+        Task<PageResult<FamousPersonModel>> GetListFamousPerson(FamousPersonModel famousPersonFilter, int page, int limit);
         Task<FamousPersonModel> GetFamousPersonById(long famousPersonId);
 
         Task<long> CreateFamousPerson(CreateFamousPersonRequest createFamousPersonRequest);
@@ -31,10 +34,23 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial class FamousPersonService
     {
         private readonly IConfigurationProvider _mapper;
+        private const int DefaultPaging = 10;
+        private const int LimitPaging = 50;
         public FamousPersonService(IUnitOfWork unitOfWork, IFamousPersonRepository repository, IMapper mapper) : base(unitOfWork, repository) {
             _mapper = mapper.ConfigurationProvider;
         }
 
+        public async Task<PageResult<FamousPersonModel>> GetListFamousPerson(FamousPersonModel famousPersonFilter, int page, int limit)
+        {
+           var(total, queryable) = Get().ProjectTo<FamousPersonModel>(_mapper).DynamicFilter(famousPersonFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            return new PageResult<FamousPersonModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Size = limit,
+                Total = total,
+            };
+        }
         public async Task<FamousPersonModel> GetFamousPersonById(long famousPersonId)
         {
             var famousPersonModel = await Get().Where(fp => fp.Id == famousPersonId).ProjectTo<FamousPersonModel>(_mapper).FirstOrDefaultAsync();

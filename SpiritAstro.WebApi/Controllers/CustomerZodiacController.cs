@@ -22,6 +22,23 @@ namespace SpiritAstro.WebApi.Controllers
             _customerZodiacService = customerZodiacService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetListCustomerZodiac([FromQuery] CustomerZodiacModel customerzodiacFilter, int page, int limit)
+        {
+            try
+            {
+                var customerzodiacModels = await _customerZodiacService.GetListCustomerZodiac(customerzodiacFilter, page, limit);
+                return Ok(MyResponse<PageResult<CustomerZodiacModel>>.OkWithData(customerzodiacModels));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateNewCustomerZodiac([FromBody] CustomerZodiacRequest createRequest)
         {

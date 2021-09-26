@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using SpiritAstro.BusinessTier.Commons.Utils;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.CustomerZodiac;
 using SpiritAstro.BusinessTier.Responses;
@@ -18,17 +19,32 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface ICustomerZodiacService
     {
+        Task<PageResult<CustomerZodiacModel>> GetListCustomerZodiac(CustomerZodiacModel customerZodiacFilter, int page, int limit);
         Task<long> CreateCustomerZodiac(CustomerZodiacRequest customerZodiacRequest);
         Task<CustomerZodiacModel> GetCustomerZodiacById(long id);
     }
     public partial class CustomerZodiacService
     {
         private readonly IConfigurationProvider _mapper;
+        private const int DefaultPaging = 10;
+        private const int LimitPaging = 50;
 
         public CustomerZodiacService(IUnitOfWork unitOfWork, ICustomerZodiacRepository repository, IMapper mapper) : base(
             unitOfWork, repository)
         {
             _mapper = mapper.ConfigurationProvider;
+        }
+
+        public async Task<PageResult<CustomerZodiacModel>> GetListCustomerZodiac(CustomerZodiacModel customerZodiacFilter, int page, int limit)
+        {
+            var (total, queryable) = Get().ProjectTo<CustomerZodiacModel>(_mapper).DynamicFilter(customerZodiacFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            return new PageResult<CustomerZodiacModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Size = limit,
+                Total = total,
+            };
         }
 
         public async Task<long> CreateCustomerZodiac(CustomerZodiacRequest customerZodiacRequest)

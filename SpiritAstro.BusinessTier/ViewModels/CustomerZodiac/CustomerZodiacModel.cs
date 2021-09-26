@@ -8,9 +8,9 @@ namespace SpiritAstro.BusinessTier.ViewModels.CustomerZodiac
 {
     public class CustomerZodiacModel
     {
-        public long Id { get; set; }
-        public long CustomerId { get; set; }
-        public int ZodiacId { get; set; }
-        public int Type { get; set; }
+        public long? Id { get; set; }
+        public long? CustomerId { get; set; }
+        public int? ZodiacId { get; set; }
+        public int? Type { get; set; }
     }
 }
