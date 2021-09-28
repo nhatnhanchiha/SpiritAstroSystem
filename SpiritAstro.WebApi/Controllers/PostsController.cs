@@ -20,11 +20,11 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPosts([FromQuery] PostModel postFilter, int page, int limit)
+        public async Task<IActionResult> GetPosts([FromQuery] PostModel postFilter,[FromQuery] string[] fields, string sort, int page, int limit)
         {
             try
             {
-                var posts = await _postService.GetPosts(postFilter, page, limit);
+                var posts = await _postService.GetPosts(postFilter, fields, sort, page, limit);
                 return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
             }
             catch (ErrorResponse e)

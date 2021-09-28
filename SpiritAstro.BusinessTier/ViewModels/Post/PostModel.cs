@@ -9,6 +9,10 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
 {
     public class PostModel
     {
+        public static string[] Fields =
+        {
+            "Id", "Title", "Content", "CreatedAt", "IsApprove", "UpdatedAt", "DeletedAt", "CategoryId", "AstrologerId"
+        };
         public long? Id { get; set; }
         [String]
         public string Title { get; set; }

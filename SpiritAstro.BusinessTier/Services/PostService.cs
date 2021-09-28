@@ -22,29 +22,43 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IPostService
     {
-        Task<PageResult<PostModel>> GetPosts(PostModel postFilter, int page, int limit);
+        Task<PageResult<PostModel>> GetPosts(PostModel postFilter, string[] fields, string sort, int page, int limit);
         Task<PostModel> GetPostById(long postId);
         Task<long> CreatePost(CreatePostRequest createPostRequest);
         Task UpdatePost(long postId, UpdatePostRequest updatePostRequest);
 
         Task DeletePost(long postId);
     }
+
     public partial class PostService
     {
         private readonly IConfigurationProvider _mapper;
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
         private readonly IAccountService _accountService;
-        public PostService(IUnitOfWork unitOfWork, IPostRepository repository, IMapper mapper, IAccountService accountService) : base(unitOfWork, repository)
+
+        public PostService(IUnitOfWork unitOfWork, IPostRepository repository, IMapper mapper,
+            IAccountService accountService) : base(unitOfWork, repository)
         {
             _accountService = accountService;
             _mapper = mapper.ConfigurationProvider;
         }
 
-        public async Task<PageResult<PostModel>> GetPosts(PostModel postFilter, int page, int limit)
+        public async Task<PageResult<PostModel>> GetPosts(PostModel postFilter, string[] fields, string sort, int page,
+            int limit)
         {
             var (total, queryable) = Get().Where(p => p.DeletedAt == null).ProjectTo<PostModel>(_mapper)
                 .DynamicFilter(postFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<PostModel>(PostModel.Fields.Intersect(fields).ToArray()
+                    .ToDynamicSelector<PostModel>());
+            }
 
             return new PageResult<PostModel>
             {
@@ -60,8 +74,10 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             var postModel = await Get().Where(p => p.Id == postId).ProjectTo<PostModel>(_mapper).FirstOrDefaultAsync();
             if (postModel == null)
             {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any post matches with id = {postId}");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any post matches with id = {postId}");
             }
+
             return postModel;
         }
 
@@ -72,10 +88,10 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             var astrologerId = _accountService.GetAstrologerId();
             post.AstrologerId = astrologerId;
-            
+
             post.CreatedAt = DateTimeOffset.Now;
             post.UpdatedAt = DateTimeOffset.Now;
-            
+
             await CreateAsyn(post);
             return post.Id;
         }
@@ -85,7 +101,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             var postInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == postId);
             if (postInDb == null)
             {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any post matches with id = {postId}");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any post matches with id = {postId}");
             }
 
             var mapper = _mapper.CreateMapper();
@@ -109,14 +126,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public async Task DeletePost(long postId)
         {
             var postInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == postId);
-            
+
             var astrologerId = _accountService.GetAstrologerId();
 
             if (astrologerId != postInDb.AstrologerId)
             {
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Insufficient permissions");
             }
-            
+
             if (postInDb == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
