@@ -25,11 +25,11 @@ namespace SpiritAstro.WebApi.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetListCategories([FromQuery]CategoryModel categoryFilter, int page, int limit)
+        public async Task<IActionResult> GetListCategories([FromQuery]CategoryModel categoryFilter, [FromQuery] string[] fields, string sort, int page, int limit)
         {
             try
             {
-                var categoryModels = await _categoryService.GetListCategories(categoryFilter, page, limit);
+                var categoryModels = await _categoryService.GetListCategories(categoryFilter, fields, sort, page, limit);
                 return Ok(MyResponse<PageResult<CategoryModel>>.OkWithData(categoryModels));
             }
             catch (ErrorResponse e)
