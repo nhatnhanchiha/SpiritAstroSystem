@@ -30,6 +30,11 @@ namespace SpiritAstro.BusinessTier.Commons.Utils
                     source = source.Where($"{item.Name}.Any(a=> @0.Contains(a))", array);
                     //source = source.Where($"{item.Name}.Intersect({array}).Any()",);
                 }
+                else if (item.CustomAttributes.Any(a => a.AttributeType == typeof(ListStrAttribute)))
+                {
+                    IList<string> array = ((string)propertyVal).Split(",").ToList();
+                    source = source.Where($"{item.Name}.Any(a=> @0.Contains(a))", array);
+                }
                 else if (item.CustomAttributes.Any(a => a.AttributeType == typeof(ChildAttribute)))
                 {
                     var childProperties = item.PropertyType.GetProperties();

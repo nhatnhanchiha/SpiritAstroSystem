@@ -37,11 +37,15 @@ namespace SpiritAstro.WebApi
             
             services.InitFirebase();
             
+            services.AddRouting(options => options.LowercaseUrls = true);
+            
             services.InitializerDI();
 
             services.ConfigureAutoMapperServices();
 
             services.AddScoped<IAccountService, AccountService>();
+
+            services.ConfigureFilterServices();
 
             services.AddDbContext<SpiritAstroContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DbContext")));

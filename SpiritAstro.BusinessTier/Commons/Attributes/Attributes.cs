@@ -44,5 +44,9 @@ namespace SpiritAstro.BusinessTier.Commons.Attributes
     public class ImmutableAttribute : System.Attribute
     {
     }
-
+    
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    public class ListStrAttribute : System.Attribute
+    {
+    }
 }
