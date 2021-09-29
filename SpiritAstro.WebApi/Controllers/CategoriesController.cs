@@ -12,7 +12,7 @@ using SpiritAstro.BusinessTier.ViewModels.Category;
 
 namespace SpiritAstro.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {

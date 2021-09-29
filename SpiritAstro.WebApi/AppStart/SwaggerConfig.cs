@@ -11,12 +11,19 @@ namespace SpiritAstro.WebApi.AppStart
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SpiritAstro.WebApi", Version = "v1" });
+                // c.SwaggerDoc("v1", new OpenApiInfo { Title = "SpiritAstro.WebApi", Version = "v1" });
                 c.AddSecurityDefinition("x-token", new OpenApiSecurityScheme
                 {
                     Name = "x-token",
                     In = ParameterLocation.Header
                 });
+                var provider = services.BuildServiceProvider();
+                var service = provider.GetRequiredService<IApiVersionDescriptionProvider>();
+                foreach (var serviceApiVersionDescription in service.ApiVersionDescriptions)
+                {
+                    c.SwaggerDoc(serviceApiVersionDescription.GroupName, CreateMetaInfoApiVersion(serviceApiVersionDescription));
+                }
+                
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement {
                     { 
                         new OpenApiSecurityScheme 
@@ -34,5 +41,18 @@ namespace SpiritAstro.WebApi.AppStart
             services.AddSwaggerGenNewtonsoftSupport();
             services.TryAddEnumerable(ServiceDescriptor.Transient<IApiDescriptionProvider, SnakeCaseQueryParametersApiDescriptionProvider>());
         }
+        
+        private static OpenApiInfo CreateMetaInfoApiVersion(ApiVersionDescription apiDescription)
+        {
+            return new OpenApiInfo
+            {
+                Title = "Spirit Astro",
+                Version = apiDescription.ApiVersion.ToString(),
+                Description = "This service provide api for spirit astro!",
+            };
+ 
+        }
     }
+    
+    
 }

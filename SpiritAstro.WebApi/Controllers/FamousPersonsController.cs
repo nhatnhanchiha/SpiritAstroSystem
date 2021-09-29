@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SpiritAstro.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class FamousPersonsController : ControllerBase
     {

@@ -13,7 +13,7 @@ using SpiritAstro.BusinessTier.ViewModels.Follow;
 
 namespace SpiritAstro.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class FollowsController : ControllerBase
     {
