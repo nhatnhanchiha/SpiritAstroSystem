@@ -10,11 +10,11 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
-    public partial interface IFollowService:IBaseService<Follow>
+    public partial interface ICasbinRuleService:IBaseService<CasbinRule>
     {
     }
-    public partial class FollowService:BaseService<Follow>,IFollowService
+    public partial class CasbinRuleService:BaseService<CasbinRule>,ICasbinRuleService
     {
-        public FollowService(IUnitOfWork unitOfWork,IFollowRepository repository):base(unitOfWork,repository){}
+        public CasbinRuleService(IUnitOfWork unitOfWork,ICasbinRuleRepository repository):base(unitOfWork,repository){}
     }
 }

@@ -18,6 +18,7 @@ using SpiritAstro.BusinessTier.Generations.DependencyInjection;
 using SpiritAstro.BusinessTier.Services;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.WebApi.AppStart;
+using SpiritAstro.WebApi.Middlewares;
 
 namespace SpiritAstro.WebApi
 {
@@ -45,19 +46,11 @@ namespace SpiritAstro.WebApi
 
             services.ConfigureAutoMapperServices();
 
-            services.AddApiVersioning(config =>
-            {
-                config.AssumeDefaultVersionWhenUnspecified = true;
-            });
-
-            services.AddVersionedApiExplorer(opt =>
-                {
-                    opt.GroupNameFormat = "'v'VVV";
-                    opt.SubstituteApiVersionInUrl = true;
-                }
-            );
+            services.ConfigureVersioningServices();
 
             services.AddScoped<IAccountService, AccountService>();
+
+            services.ConfigureCasbinServices();
 
             services.ConfigureFilterServices();
 
@@ -93,6 +86,8 @@ namespace SpiritAstro.WebApi
             app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseRouting();
 

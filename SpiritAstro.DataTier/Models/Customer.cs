@@ -19,7 +19,6 @@ namespace SpiritAstro.DataTier.Models
         public string PhoneNumber { get; set; }
         public int StatusPayment { get; set; }
         public bool Gender { get; set; }
-        public int Status { get; set; }
         public double LatitudeOfBirth { get; set; }
         public double LongitudeOfBirth { get; set; }
         public DateTimeOffset TimeOfBirth { get; set; }
@@ -27,6 +26,7 @@ namespace SpiritAstro.DataTier.Models
         public DateTimeOffset? UpdatedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
 
+        public virtual User IdNavigation { get; set; }
         public virtual ICollection<Booking> Bookings { get; set; }
         public virtual ICollection<CustomerZodiac> CustomerZodiacs { get; set; }
         public virtual ICollection<Follow> Follows { get; set; }

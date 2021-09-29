@@ -19,6 +19,7 @@ namespace SpiritAstro.DataTier.Models
 
         public virtual DbSet<Astrologer> Astrologers { get; set; }
         public virtual DbSet<Booking> Bookings { get; set; }
+        public virtual DbSet<CasbinRule> CasbinRules { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<CustomerZodiac> CustomerZodiacs { get; set; }
@@ -32,7 +33,10 @@ namespace SpiritAstro.DataTier.Models
         public virtual DbSet<PostPlanet> PostPlanets { get; set; }
         public virtual DbSet<PostZodiac> PostZodiacs { get; set; }
         public virtual DbSet<PriceTable> PriceTables { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<Wallet> Wallets { get; set; }
         public virtual DbSet<Zodiac> Zodiacs { get; set; }
 
@@ -55,7 +59,9 @@ namespace SpiritAstro.DataTier.Models
                     .HasName("Astrologers_pk")
                     .IsClustered(false);
 
-                entity.HasIndex(e => e.DeletedAt, "UIDx_astrologers_deleted_at");
+                entity.HasIndex(e => e.DeletedAt, "IDx_astrologers_deleted_at");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -63,7 +69,13 @@ namespace SpiritAstro.DataTier.Models
 
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
-                    .HasMaxLength(20);
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Astrologer)
+                    .HasForeignKey<Astrologer>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Astrologers_Users_Id_fk");
             });
 
             modelBuilder.Entity<Booking>(entity =>
@@ -85,6 +97,41 @@ namespace SpiritAstro.DataTier.Models
                     .HasConstraintName("Bookings_Customers_Id_fk");
             });
 
+            modelBuilder.Entity<CasbinRule>(entity =>
+            {
+                entity.ToTable("casbin_rule");
+
+                entity.HasIndex(e => e.Ptype, "IX_casbin_rule_ptype");
+
+                entity.HasIndex(e => e.V0, "IX_casbin_rule_v0");
+
+                entity.HasIndex(e => e.V1, "IX_casbin_rule_v1");
+
+                entity.HasIndex(e => e.V2, "IX_casbin_rule_v2");
+
+                entity.HasIndex(e => e.V3, "IX_casbin_rule_v3");
+
+                entity.HasIndex(e => e.V4, "IX_casbin_rule_v4");
+
+                entity.HasIndex(e => e.V5, "IX_casbin_rule_v5");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Ptype).HasColumnName("ptype");
+
+                entity.Property(e => e.V0).HasColumnName("v0");
+
+                entity.Property(e => e.V1).HasColumnName("v1");
+
+                entity.Property(e => e.V2).HasColumnName("v2");
+
+                entity.Property(e => e.V3).HasColumnName("v3");
+
+                entity.Property(e => e.V4).HasColumnName("v4");
+
+                entity.Property(e => e.V5).HasColumnName("v5");
+            });
+
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(e => e.Id)
@@ -102,7 +149,9 @@ namespace SpiritAstro.DataTier.Models
                     .HasName("Customers_pk")
                     .IsClustered(false);
 
-                entity.HasIndex(e => e.DeletedAt, "UIDx_customers_deleted_at");
+                entity.HasIndex(e => e.DeletedAt, "IDx_customers_deleted_at");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -110,7 +159,13 @@ namespace SpiritAstro.DataTier.Models
 
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
-                    .HasMaxLength(20);
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Customer)
+                    .HasForeignKey<Customer>(d => d.Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Customers_Users__fk");
             });
 
             modelBuilder.Entity<CustomerZodiac>(entity =>
@@ -306,6 +361,19 @@ namespace SpiritAstro.DataTier.Models
                     .IsClustered(false);
             });
 
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("Roles_pk")
+                    .IsClustered(false);
+
+                entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255);
+            });
+
             modelBuilder.Entity<Transaction>(entity =>
             {
                 entity.HasKey(e => new { e.PaymentId, e.WalletId })
@@ -323,6 +391,41 @@ namespace SpiritAstro.DataTier.Models
                     .HasForeignKey(d => d.WalletId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Transactions_Wallets_Id_fk");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("Users_pk")
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.Uid, "Users_Uid_uindex")
+                    .IsUnique();
+
+                entity.Property(e => e.Uid)
+                    .IsRequired()
+                    .HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId })
+                    .HasName("UserRoles_pk")
+                    .IsClustered(false);
+
+                entity.Property(e => e.RoleId).HasMaxLength(50);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("UserRoles_Roles_Id_fk");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("UserRoles_Users_Id_fk");
             });
 
             modelBuilder.Entity<Wallet>(entity =>

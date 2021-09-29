@@ -48,9 +48,8 @@ namespace SpiritAstro.WebApi.AppStart
             {
                 Title = "Spirit Astro",
                 Version = apiDescription.ApiVersion.ToString(),
-                Description = "This service provide api for spirit astro!",
+                Description = "This service provide api for SpiritAstroSystem!",
             };
- 
         }
     }
     

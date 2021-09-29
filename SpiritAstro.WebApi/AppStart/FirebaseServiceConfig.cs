@@ -14,7 +14,7 @@ namespace SpiritAstro.WebApi.AppStart
                 Credential =
                     GoogleCredential.FromFile("Resources/spiritastro-2bfba-firebase-adminsdk-qk1a8-2c46bb7e8a.json")
             });
-
+            
             services.AddScoped<IFirebaseService, FirebaseService>();
         }
     }
