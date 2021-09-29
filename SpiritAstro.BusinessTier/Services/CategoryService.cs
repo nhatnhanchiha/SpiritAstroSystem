@@ -12,12 +12,13 @@ using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Category;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
+using System.Linq.Dynamic.Core;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface ICategoryService
     {
-        Task<PageResult<CategoryModel>> GetListCategories(CategoryModel categoryFilter, int page, int limit);
+        Task<PageResult<CategoryModel>> GetListCategories(CategoryModel categoryFilter, string[] fields, string sort, int page, int limit);
         Task<CategoryModel> GetCategoryById(long categoryId);
         Task<long> CreateCategory(CreateCategoryRequest createCategoryRequest);
 
@@ -37,10 +38,19 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             _mapper = mapper.ConfigurationProvider;
         }
 
-        public async Task<PageResult<CategoryModel>> GetListCategories(CategoryModel categoryFilter, int page, int limit)
+        public async Task<PageResult<CategoryModel>> GetListCategories(CategoryModel categoryFilter, string[] fields, string sort, int page, int limit)
         {
             var (total, queryable) = Get().ProjectTo<CategoryModel>(_mapper).DynamicFilter(categoryFilter)
                 .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<CategoryModel>(CategoryModel.Fields.Intersect(fields).ToArray()
+                    .ToDynamicSelector<CategoryModel>());
+            }
             return new PageResult<CategoryModel>
             {
                 List = await queryable.ToListAsync(),

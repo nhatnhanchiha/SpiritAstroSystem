@@ -24,6 +24,23 @@ namespace SpiritAstro.WebApi.Controllers
             _bookingService = bookingService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetListBookings([FromQuery] BookingModel bookingFilter,[FromQuery] string[] fields, string sort, int page, int limit)
+        {
+            try
+            {
+                var categoryModels = await _bookingService.GetListBookings(bookingFilter, fields, sort, page, limit);
+                return Ok(MyResponse<PageResult<BookingModel>>.OkWithData(categoryModels));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
         // Chả biết để làm gì
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetBookingById(long id)
