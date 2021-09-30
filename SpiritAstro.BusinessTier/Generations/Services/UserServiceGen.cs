@@ -15,6 +15,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     }
     public partial class UserService:BaseService<User>,IUserService
     {
-        public UserService(IUnitOfWork unitOfWork,IUserRepository repository):base(unitOfWork,repository){}
+        public UserService(IUnitOfWork unitOfWork,IUserRepository repository):base(unitOfWork,repository)
+        {
+        }
     }
 }
