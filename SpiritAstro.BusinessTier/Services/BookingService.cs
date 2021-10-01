@@ -41,7 +41,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task<PageResult<BookingModel>> GetListBookings(BookingModel bookingFilter, string[] fields, string sort, int page, int limit)
         {
-            var (total, queryable) = Get().ProjectTo<BookingModel>(_mapper).DynamicFilter(bookingFilter)
+            var (total, queryable) = Get().Where(b => b.DeletedAt == null).ProjectTo<BookingModel>(_mapper).DynamicFilter(bookingFilter)
                 .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
             if (sort != null)
             {
@@ -63,7 +63,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task<BookingModel> GetBookingById(long bookingId)
         {
-            var bookingModel = await Get().ProjectTo<BookingModel>(_mapper).FirstOrDefaultAsync(b => b.Id == bookingId);
+            var bookingModel = await Get().ProjectTo<BookingModel>(_mapper).FirstOrDefaultAsync(b => b.Id == bookingId && b.DeletedAt == null);
             if (bookingModel == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
@@ -91,7 +91,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             
             var customerId = _accountService.GetCustomerId();
 
-            var otherBooking = await Get().FirstOrDefaultAsync(b => b.CustomerId == customerId && (b.StartTime <= booking.StartTime && b.EndTime >= booking.StartTime || b.StartTime <= booking.EndTime && b.EndTime >= booking.EndTime));
+            var otherBooking = await Get().FirstOrDefaultAsync(b => b.CustomerId == customerId && b.DeletedAt == null && (b.StartTime <= booking.StartTime && b.EndTime >= booking.StartTime || b.StartTime <= booking.EndTime && b.EndTime >= booking.EndTime));
             if (otherBooking != null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest,
@@ -101,7 +101,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             booking.CustomerId = customerId;
 
             var bookingInDb = await Get().FirstOrDefaultAsync(b =>
-                b.CustomerId == customerId && b.AstrologerId == booking.AstrologerId &&
+                b.CustomerId == customerId && b.AstrologerId == booking.AstrologerId && b.DeletedAt == null &&
                 b.Status != (int)BookingStatus.Cancel);
 
             if (bookingInDb != null)
@@ -109,6 +109,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest,
                     $"You made the booking with the astrologer has id = {booking.AstrologerId}");
             }
+            
+            booking.CreatedAt = DateTimeOffset.Now;
+            booking.UpdatedAt = DateTimeOffset.Now;
 
             await CreateAsyn(booking);
 
