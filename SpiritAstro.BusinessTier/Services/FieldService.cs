@@ -68,14 +68,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task<FieldModel> GetFieldById(long fieldId)
         {
-            var categoryModel = await Get().Where(f => f.Id == fieldId).ProjectTo<FieldModel>(_mapper).FirstOrDefaultAsync();
-            if (categoryModel == null)
+            var fieldModel = await Get().Where(f => f.Id == fieldId).ProjectTo<FieldModel>(_mapper).FirstOrDefaultAsync();
+            if (fieldModel == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
                     $"Cannot find any field matches with id = {fieldId}");
             }
 
-            return categoryModel;
+            return fieldModel;
         }
 
         public async Task UpdateField(long fieldId, UpdateFieldRequest updateFieldRequest)

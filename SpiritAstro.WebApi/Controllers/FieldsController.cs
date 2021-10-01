@@ -62,8 +62,8 @@ namespace SpiritAstro.WebApi.Controllers
         {
             try
             {
-                var categoryModel = await _fieldService.GetFieldById(id);
-                return Ok(MyResponse<FieldModel>.OkWithData(categoryModel));
+                var fieldModel = await _fieldService.GetFieldById(id);
+                return Ok(MyResponse<FieldModel>.OkWithData(fieldModel));
             }
             catch (ErrorResponse e)
             {

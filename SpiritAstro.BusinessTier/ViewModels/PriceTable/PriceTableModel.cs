@@ -10,9 +10,10 @@ namespace SpiritAstro.BusinessTier.ViewModels.PriceTable
     {
         public static string[] Fields =
         {
-            "Price1", "Duration1", "Price2", "Duration2", "Price3", "Duration3"
+            "Id", "Price1", "Duration1", "Price2", "Duration2", "Price3", "Duration3"
         };
 
+        public long? Id { get; set; }
         public double? Price1 { get; set; }
         public double? Duration1 { get; set; }
         public double? Price2 { get; set; }
