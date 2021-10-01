@@ -24,11 +24,11 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListField([FromQuery] FieldModel fieldFilter, int page, int limit)
+        public async Task<IActionResult> GetListField([FromQuery] FieldModel fieldFilter, int page, int limit, [FromQuery] string[] fields, string sort)
         {
             try
             {
-                var fieldModels = await _fieldService.GetListField(fieldFilter, page, limit);
+                var fieldModels = await _fieldService.GetListField(fieldFilter, page, limit, fields, sort);
                 return Ok(MyResponse<PageResult<FieldModel>>.OkWithData(fieldModels));
             }
             catch (ErrorResponse e)
@@ -43,15 +43,10 @@ namespace SpiritAstro.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNewField([FromBody] CreateFieldRequest createFieldRequest)
         {
-            var claims = (CustomClaims)HttpContext.Items["claims"];
 
             try
             {
-                if (claims == null)
-                {
-                    return Ok(MyResponse<object>.FailWithMessage("Access denied !"));
-                }
-
+                
                 var fieldId = await _fieldService.CreateField(createFieldRequest);
                 return Ok(MyResponse<long>.OkWithDetail(fieldId,
                     $"Created success field with id = {fieldId}"));

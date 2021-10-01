@@ -9,6 +9,11 @@ namespace SpiritAstro.BusinessTier.ViewModels.FamousPerson
 {
     public class FamousPersonModel
     {
+        public static string[] Fields =
+        {
+            "Id", "Name", "Description"
+        };
+
         public long? Id { get; set; }
         [String]
         public string Name { get; set; }

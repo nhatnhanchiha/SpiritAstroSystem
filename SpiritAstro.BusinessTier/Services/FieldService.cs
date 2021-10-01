@@ -10,6 +10,7 @@ using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using System;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<FieldModel> GetFieldById(long fieldId);
         Task UpdateField(long fieldId, UpdateFieldRequest updateFieldRequest);
         Task DeleteField(long fieldId);
-        Task<PageResult<FieldModel>> GetListField(FieldModel fieldFilter, int page, int limit);
+        Task<PageResult<FieldModel>> GetListField(FieldModel fieldFilter, int page, int limit, string[] fields, string sort);
     }
     public partial class FieldService
     {
@@ -35,9 +36,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             _mapper = mapper.ConfigurationProvider;
         }
 
-        public async Task<PageResult<FieldModel>> GetListField(FieldModel fieldFilter, int page, int limit)
+        public async Task<PageResult<FieldModel>> GetListField(FieldModel fieldFilter, int page, int limit, string[] fields, string sort)
         {
             var (total, queryable) = Get().ProjectTo<FieldModel>(_mapper).DynamicFilter(fieldFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<FieldModel>(FieldModel.Fields.Intersect(fields).ToArray()
+                    .ToDynamicSelector<FieldModel>());
+            }
             return new PageResult<FieldModel>
             {
                 List = await queryable.ToListAsync(),

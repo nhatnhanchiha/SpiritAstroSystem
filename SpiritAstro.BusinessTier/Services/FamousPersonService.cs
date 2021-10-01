@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IFamousPersonService
     {
-        Task<PageResult<FamousPersonModel>> GetListFamousPerson(FamousPersonModel famousPersonFilter, int page, int limit);
+        Task<PageResult<FamousPersonModel>> GetListFamousPerson(FamousPersonModel famousPersonFilter, int page, int limit, string sort, string[] fields);
         Task<FamousPersonModel> GetFamousPersonById(long famousPersonId);
 
         Task<long> CreateFamousPerson(CreateFamousPersonRequest createFamousPersonRequest);
@@ -40,9 +41,19 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             _mapper = mapper.ConfigurationProvider;
         }
 
-        public async Task<PageResult<FamousPersonModel>> GetListFamousPerson(FamousPersonModel famousPersonFilter, int page, int limit)
+        public async Task<PageResult<FamousPersonModel>> GetListFamousPerson(FamousPersonModel famousPersonFilter, int page, int limit, string sort, string[] fields)
         {
-           var(total, queryable) = Get().ProjectTo<FamousPersonModel>(_mapper).DynamicFilter(famousPersonFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            var (total, queryable) = Get().ProjectTo<FamousPersonModel>(_mapper)
+                 .DynamicFilter(famousPersonFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<FamousPersonModel>(FamousPersonModel.Fields.Intersect(fields).ToArray()
+                    .ToDynamicSelector<FamousPersonModel>());
+            }
             return new PageResult<FamousPersonModel>
             {
                 List = await queryable.ToListAsync(),
