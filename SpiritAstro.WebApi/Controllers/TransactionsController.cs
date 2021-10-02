@@ -26,9 +26,10 @@ namespace SpiritAstro.WebApi.Controllers
         {
             try
             {
-                var PaymentId = await _transactionService.CreateTransaction(createTransaction);
-                return Ok(MyResponse<long>.OkWithDetail(PaymentId,
-                    $"Created success transaction with PaymentId = {PaymentId}"));
+                Console.WriteLine("abc");
+                var paymentId = await _transactionService.CreateTransaction(createTransaction);
+                return Ok(MyResponse<long>.OkWithDetail(paymentId,
+                    $"Created success transaction with PaymentId = {paymentId}"));
             }
             catch (ErrorResponse e)
             {

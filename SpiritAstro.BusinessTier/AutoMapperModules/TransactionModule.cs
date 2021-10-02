@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using SpiritAstro.BusinessTier.Requests.Transaction;
 using SpiritAstro.BusinessTier.ViewModels.Transaction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
+using SpiritAstro.DataTier.Models;
+
 
 namespace SpiritAstro.BusinessTier.AutoMapperModules
 {
