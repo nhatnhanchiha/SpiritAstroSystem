@@ -113,6 +113,7 @@ namespace SpiritAstro.WebApi.Controllers
             try
             {
                 await _astrologerService.DeleteAnAstrologer(id);
+                // Todo: Delete user role for this astrologer
                 return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
             }
             catch (ErrorResponse e)
