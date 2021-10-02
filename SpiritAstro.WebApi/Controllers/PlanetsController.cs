@@ -61,8 +61,8 @@ namespace SpiritAstro.WebApi.Controllers
         {
             try
             {
-                await _planetService.CreatePlanet(createPlanetRequest);
-                return Ok(MyResponse<object>.OkWithMessage("Created success"));
+                var planetId = await _planetService.CreatePlanet(createPlanetRequest);
+                return Ok(MyResponse<long>.OkWithDetail(planetId, $"Created success planet with id = {planetId}"));
             }
             catch (ErrorResponse e)
             {

@@ -21,7 +21,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             string sort, int page, int limit);
 
         Task<PlanetModel> GetPlanetById(long planetId);
-        Task CreatePlanet(CreatePlanetRequest createPlanetRequest);
+        Task<long> CreatePlanet(CreatePlanetRequest createPlanetRequest);
         Task UpdatePlanet(long planetId, UpdatePlanetRequest updatePlanetRequest);
         Task DeletePlanetById(long planetId);
     }
@@ -73,11 +73,12 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             return planetModel;
         }
 
-        public async Task CreatePlanet(CreatePlanetRequest createPlanetRequest)
+        public async Task<long> CreatePlanet(CreatePlanetRequest createPlanetRequest)
         {
             var mapper = _mapper.CreateMapper();
             var planet = mapper.Map<Planet>(createPlanetRequest);
             await CreateAsyn(planet);
+            return planet.Id;
         }
 
         public async Task UpdatePlanet(long planetId, UpdatePlanetRequest updatePlanetRequest)
