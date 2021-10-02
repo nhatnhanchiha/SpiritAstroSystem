@@ -22,6 +22,7 @@ namespace SpiritAstro.WebApi.AppStart
                 mc.ConfigFollowMapperModule();
                 mc.ConfigCustomerMapperModule();
                 mc.ConfigZodiacMapperModule();
+                mc.ConfigUserRoleMapperModule();
             });
             var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
