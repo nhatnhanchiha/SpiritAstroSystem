@@ -20,14 +20,16 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
 
     public class PublicCustomerModel
     {
-        public long Id { get; set; }
+        public static string[] Fields =
+            { "Id", "Name", "PhoneNumber", "Gender", "Status", "LatitudeOfBirth", "LongitudeOfBirth", "TimeOfBirth" };
+        public long? Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
-        public bool Gender { get; set; }
-        public int Status { get; set; }
-        public double LatitudeOfBirth { get; set; }
-        public double LongitudeOfBirth { get; set; }
-        public DateTimeOffset TimeOfBirth { get; set; }
+        public bool? Gender { get; set; }
+        public int? Status { get; set; }
+        public double? LatitudeOfBirth { get; set; }
+        public double? LongitudeOfBirth { get; set; }
+        public DateTimeOffset? TimeOfBirth { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
     }
 }

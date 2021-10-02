@@ -21,6 +21,8 @@ namespace SpiritAstro.WebApi.AppStart
                 mc.ConfigAstrologerMapperModule();
                 mc.ConfigFollowMapperModule();
                 mc.ConfigCustomerMapperModule();
+                mc.ConfigPlanetMapperModule();
+                mc.ConfigFieldDetailMapperModule();
             });
             var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
