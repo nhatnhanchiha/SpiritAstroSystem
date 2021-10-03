@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SpiritAstro.BusinessTier.Requests.Customer;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using SpiritAstro.BusinessTier.ViewModels.Customer;
 using SpiritAstro.DataTier.Models;
@@ -11,6 +12,8 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
         {
             mc.CreateMap<Customer, CustomerModel>();
             mc.CreateMap<Customer, PublicCustomerModel>();
+            mc.CreateMap<RegisterCustomerRequest, Customer>();
+            mc.CreateMap<UpdateCustomerRequest, Customer>();
         }
     }
 }
