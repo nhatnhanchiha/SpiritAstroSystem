@@ -20,14 +20,19 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
 
     public class PublicAstrologerModel
     {
-        public long Id { get; set; }
+        public static readonly string[] Fields =
+        {
+            "Id", "Name", "PhoneNumber", "Gender", "Status", "LatitudeOfBirth", "LongitudeOfBirth", "TimeOfBirth",
+            "DeletedAt"
+        };
+        public long? Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
-        public bool Gender { get; set; }
-        public int Status { get; set; }
-        public double LatitudeOfBirth { get; set; }
-        public double LongitudeOfBirth { get; set; }
-        public DateTimeOffset TimeOfBirth { get; set; }
+        public bool? Gender { get; set; }
+        public int? Status { get; set; }
+        public double? LatitudeOfBirth { get; set; }
+        public double? LongitudeOfBirth { get; set; }
+        public DateTimeOffset? TimeOfBirth { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
     }
 }

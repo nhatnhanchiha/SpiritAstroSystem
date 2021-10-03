@@ -34,7 +34,6 @@ namespace SpiritAstro.WebApi.Controllers
             
             try
             {
-                await _userService.CheckRegistered(uid);
                 var loginResponse = await _userService.Login(uid);
                 return Ok(MyResponse<LoginResponse>.OkWithData(loginResponse));
             }

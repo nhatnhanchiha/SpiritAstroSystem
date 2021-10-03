@@ -8,7 +8,7 @@ namespace SpiritAstro.DataTier.BaseConnect
     {
         protected IUnitOfWork unitOfWork;
         protected IBaseRepository<TEntity> repository;
-        public BaseService()
+        public BaseService(IUnitOfWork unitOfWork)
         {
 
         }

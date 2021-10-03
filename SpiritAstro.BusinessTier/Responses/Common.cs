@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SpiritAstro.BusinessTier.Responses
 {
@@ -36,6 +37,11 @@ namespace SpiritAstro.BusinessTier.Responses
                 Code = Success,
                 Data = data
             };
+        }
+
+        public static object OkWithData(object walletModel)
+        {
+            throw new NotImplementedException();
         }
 
         public static MyResponse<T> OkWithDetail(T data, string message)

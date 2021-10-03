@@ -19,7 +19,6 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IUserService
     {
-        Task CheckRegistered(string uid);
         Task<LoginResponse> Login(string uid);
     }
 
@@ -42,16 +41,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             return GenerateJwtToken(user);
         }
-
-
-        public async Task CheckRegistered(string uid)
-        {
-            var user = await Get().FirstOrDefaultAsync(u => u.Uid == uid);
-            if (user == null)
-            {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot find any uid");
-            }
-        }
+        
 
         private LoginResponse GenerateJwtToken(User user)
         {
