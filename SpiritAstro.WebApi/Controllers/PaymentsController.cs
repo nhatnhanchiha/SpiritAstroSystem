@@ -13,11 +13,11 @@ namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class PaymentController : ControllerBase
+    public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
         }

@@ -13,11 +13,11 @@ namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class PriceTableController : ControllerBase
+    public class PriceTablesController : ControllerBase
     {
         private readonly IPriceTableService _priceTableService;
 
-        public PriceTableController(IPriceTableService priceTable)
+        public PriceTablesController(IPriceTableService priceTable)
         {
             _priceTableService = priceTable;
         }

@@ -14,11 +14,11 @@ namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class PostZodiacController : ControllerBase
+    public class PostZodiacsController : ControllerBase
     {
         private readonly IPostZodiacService _postZodiacService;
 
-        public PostZodiacController(IPostZodiacService postZodiacService)
+        public PostZodiacsController(IPostZodiacService postZodiacService)
         {
             _postZodiacService = postZodiacService;
         }
