@@ -16,6 +16,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
         public DateTimeOffset? CreatedAt { get; set; }
         public DateTimeOffset? UpdatedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
+        public string UrlImage { get; set; }
     }
 
     public class PublicCustomerModel
@@ -31,5 +32,6 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
         public double? LongitudeOfBirth { get; set; }
         public DateTimeOffset? TimeOfBirth { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
+        public string UrlImage { get; set; }
     }
 }

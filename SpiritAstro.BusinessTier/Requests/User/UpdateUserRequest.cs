@@ -15,5 +15,6 @@ namespace SpiritAstro.BusinessTier.Requests.User
         public double LatitudeOfBirth { get; set; }
         public double LongitudeOfBirth { get; set; }
         public DateTime TimeOfBirth { get; set; }
+        public string UrlImage { get; set; }
     }
 }
