@@ -35,10 +35,19 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public async Task<LoginResponse> Login(string uid)
         {
             var user = await Get().Include(u => u.UserRoles)
-                .Include(u => u.Astrologer)
-                .Include(u => u.Customer)
                 .FirstOrDefaultAsync(u => u.Uid == uid && u.DeletedAt == null);
 
+            if (user == null)
+            {
+                var userInReq = new User
+                {
+                    Uid = uid,
+                };
+                await CreateAsyn(userInReq);
+
+                user = userInReq;
+            }
+            
             return GenerateJwtToken(user);
         }
         

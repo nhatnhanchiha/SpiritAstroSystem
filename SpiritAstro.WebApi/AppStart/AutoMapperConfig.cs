@@ -21,6 +21,9 @@ namespace SpiritAstro.WebApi.AppStart
                 mc.ConfigAstrologerMapperModule();
                 mc.ConfigFollowMapperModule();
                 mc.ConfigCustomerMapperModule();
+                mc.ConfigPostZodiacMapperModule();
+                mc.ConfigPriceTableMapperModule();
+                mc.ConfigPaymentMapperModule();
                 mc.ConfigZodiacMapperModule();
                 mc.ConfigUserRoleMapperModule();
                 mc.ConfigTransactionMapperModule();

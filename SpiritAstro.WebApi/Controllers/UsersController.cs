@@ -28,9 +28,9 @@ namespace SpiritAstro.WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginWithToken([FromBody] LoginRequest loginRequest)
         {
-            // var decodedToken = await FirebaseAuth.DefaultInstance
-            //     .VerifyIdTokenAsync(loginRequest.Token);
-            var uid = "0bYx5eK28LXn5QWwSRJ7AKhMCDF3";
+            var decodedToken = await FirebaseAuth.DefaultInstance
+                .VerifyIdTokenAsync(loginRequest.Token);
+            var uid = decodedToken.Uid;
             
             try
             {

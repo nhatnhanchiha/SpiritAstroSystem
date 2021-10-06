@@ -30,10 +30,18 @@ namespace SpiritAstro.WebApi
         }
 
         public IConfiguration Configuration { get; }
+        private const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy(MyAllowSpecificOrigins, builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+            
             services.InitSwagger();
 
             services.ConfigureJsonFormatServices();
@@ -90,6 +98,8 @@ namespace SpiritAstro.WebApi
             app.UseMiddleware<JwtMiddleware>();
 
             app.UseRouting();
+            
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
