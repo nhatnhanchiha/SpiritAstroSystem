@@ -12,5 +12,6 @@ namespace SpiritAstro.BusinessTier.Requests.Customer
         public double LongitudeOfBirth { get; set; }
         public DateTimeOffset TimeOfBirth { get; set; }
         public string UrlImage { get; set; }
+        public string Email { get; set; }
     }
 }
