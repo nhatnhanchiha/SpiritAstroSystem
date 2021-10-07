@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -41,6 +42,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewField([FromBody] CreateFieldRequest createFieldRequest)
         {
 
@@ -77,6 +79,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdateField(long id, [FromBody] UpdateFieldRequest updateFieldRequest)
         {
             //var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -103,6 +106,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeleteField(long id)
         {
             try

@@ -10,6 +10,7 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Booking;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Booking;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -25,6 +26,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetListBookings([FromQuery] BookingModel bookingFilter,[FromQuery] string[] fields, string sort, int page, int limit)
         {
             try
@@ -43,6 +45,7 @@ namespace SpiritAstro.WebApi.Controllers
 
         // Chả biết để làm gì
         [HttpGet("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetBookingById(long id)
         {
             try
@@ -61,6 +64,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
         
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateBooking(CreateBookingRequest createBookingRequest)
         {
             try

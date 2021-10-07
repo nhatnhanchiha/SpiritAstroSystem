@@ -10,6 +10,7 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Follow;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Follow;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -25,6 +26,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> Follow([FromBody] FollowRequest followRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -45,6 +47,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("followings")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetFollowing(int page, int limit)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -64,6 +67,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("followers")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetFollower(int page, int limit)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];

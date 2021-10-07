@@ -9,6 +9,7 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Category;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Category;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -60,6 +61,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewCategory([FromBody] CreateCategoryRequest createCategoryRequest)
         {
             try
@@ -76,6 +78,7 @@ namespace SpiritAstro.WebApi.Controllers
 
 
         [HttpPut("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdateCategory(long id, [FromBody] UpdateCategoryRequest updateCategoryRequest)
         {
             try
@@ -95,6 +98,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeleteCategory(long id)
         {
             try

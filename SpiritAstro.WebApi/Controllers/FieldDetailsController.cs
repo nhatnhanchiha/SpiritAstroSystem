@@ -5,6 +5,7 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.FieldDetail;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.FieldDetail;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -34,6 +35,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateFieldDetail([FromBody] CreateFieldDetailRequest createFieldDetailRequest)
         {
             try
@@ -52,6 +54,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdateFieldDetail([FromBody] UpdateFieldDetailRequest updateFieldDetailRequest)
         {
             try
@@ -70,6 +73,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeleteFieldDetail([FromBody] DeleteFieldDetailRequest deleteFieldDetailRequest)
         {
             try

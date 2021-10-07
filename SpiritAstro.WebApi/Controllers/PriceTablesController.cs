@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreatePriceTable([FromBody] CreatePriceTableRequest createPriceTable)
         {
 
@@ -40,6 +42,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdatePriceTable(long id, [FromBody] UpdatePriceTableRequest updatePriceTable)
         {
             try

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -22,6 +23,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateUserRole([FromBody] CreateUserRoleRequest createUserRoleZodiac)
         {
             try
@@ -37,6 +39,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetListUserRole([FromQuery] UserRoleModel userRoleFilter, [FromQuery] string[] fields, string sort, int page, int limit)
         {
             try

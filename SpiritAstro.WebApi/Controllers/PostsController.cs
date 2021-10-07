@@ -5,6 +5,7 @@ using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Post;
 using System.Net;
 using System.Threading.Tasks;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -53,6 +54,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewPost(
             [FromBody] CreatePostRequest createPostRequest)
         {
@@ -69,6 +71,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdatePost(long id, [FromBody] UpdatePostRequest updatePostRequest)
         {
             try
@@ -88,6 +91,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeletePost(long id)
         {
             try

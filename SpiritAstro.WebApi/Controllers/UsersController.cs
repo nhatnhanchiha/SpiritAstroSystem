@@ -11,6 +11,7 @@ using SpiritAstro.BusinessTier.Requests;
 using SpiritAstro.BusinessTier.Requests.User;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -25,6 +26,7 @@ namespace SpiritAstro.WebApi.Controllers
             _userService = userService;
         }
 
+        [CustomAuthorize]
         [HttpPost("login")]
         public async Task<IActionResult> LoginWithToken([FromBody] LoginRequest loginRequest)
         {

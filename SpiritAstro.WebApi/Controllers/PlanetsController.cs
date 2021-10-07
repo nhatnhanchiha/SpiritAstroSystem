@@ -9,6 +9,7 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Planet;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Planet;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -57,6 +58,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreatePlanet([FromBody] CreatePlanetRequest createPlanetRequest)
         {
             try
@@ -74,6 +76,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdatePlanet(long id, [FromBody] UpdatePlanetRequest updatePlanetRequest)
         {
             try
@@ -92,6 +95,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeletePlanet(long id)
         {
             try

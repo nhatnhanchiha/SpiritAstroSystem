@@ -11,6 +11,7 @@ using SpiritAstro.BusinessTier.Requests.Customer;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using SpiritAstro.BusinessTier.ViewModels.Customer;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -67,6 +68,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> RegisterACustomer([FromBody] RegisterCustomerRequest registerCustomerRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -91,6 +93,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdateACustomer([FromBody] UpdateCustomerRequest updateCustomerRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -113,6 +116,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeleteCustomerById(long id)
         {
             try

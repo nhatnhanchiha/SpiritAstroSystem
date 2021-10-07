@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using SpiritAstro.BusinessTier.ViewModels.Wallet;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetWalletById(long id)
         {
             try

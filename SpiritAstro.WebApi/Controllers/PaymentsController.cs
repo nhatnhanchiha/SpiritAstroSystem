@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> CreateNewPayment([FromBody] CreatePaymentRequest createPayment)
         {
             try
@@ -38,6 +40,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdatePayment(long id, [FromBody] UpdatePaymentRequest updatePayment)
         {
 
@@ -58,6 +61,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetPaymentById(long id)
         {
             try
@@ -77,6 +81,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetListPayment([FromQuery] PaymentModel paymentFilter, int page, int limit, [FromQuery] string[] fields, string sort)
         {
             try
@@ -94,6 +99,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeletePayment(long id)
         {
             try

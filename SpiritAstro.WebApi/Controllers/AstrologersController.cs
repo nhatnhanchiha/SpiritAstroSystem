@@ -6,6 +6,7 @@ using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Astrologer;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
@@ -63,6 +64,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
+        [CasbinAuthorize]
         public async Task<IActionResult> RegisterAnAstrologer([FromBody] RegisterAstrologerRequest registerAstrologerRequest)
         {
             try
@@ -83,6 +85,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> UpdateAnAstrologer(long id, [FromBody] UpdateAstrologerRequest updateAstrologerRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -108,6 +111,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> DeleteAnAstrologer(long id)
         {
             try
