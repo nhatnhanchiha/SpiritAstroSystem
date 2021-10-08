@@ -35,6 +35,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public async Task<LoginResponse> Login(string uid)
         {
             var user = await Get().Include(u => u.UserRoles)
+                .Include(u => u.Astrologer)
+                .Include(u => u.Customer)
                 .FirstOrDefaultAsync(u => u.Uid == uid && u.DeletedAt == null);
 
             if (user == null)
@@ -80,6 +82,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             return new LoginResponse
             {
                 UserId = user.Id,
+                Name = user.Customer == null ? user.Astrologer == null ? "Unknown user" : user.Astrologer.Name : user.Customer.Name,
                 Roles = customClaims.Roles,
                 Token = tokenString,
                 BufferTime = customClaims.BufferTime * 1000,
