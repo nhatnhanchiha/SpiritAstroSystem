@@ -26,7 +26,6 @@ namespace SpiritAstro.WebApi.Controllers
             _userService = userService;
         }
 
-        [CustomAuthorize]
         [HttpPost("login")]
         public async Task<IActionResult> LoginWithToken([FromBody] LoginRequest loginRequest)
         {
