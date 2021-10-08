@@ -9,5 +9,6 @@ namespace SpiritAstro.BusinessTier.Responses.User
         public string Token { get; set; }
         public long ExpiresAt { get; set; }
         public long BufferTime { get; set; }
+        public bool IsRegister { get; set; }
     }
 }

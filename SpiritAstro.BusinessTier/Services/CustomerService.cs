@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using SpiritAstro.BusinessTier.Commons.Utils;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Requests.Customer;
+using SpiritAstro.BusinessTier.Requests.UserRole;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Customer;
 using SpiritAstro.DataTier.BaseConnect;
@@ -32,12 +34,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial class CustomerService
     {
         private readonly IConfigurationProvider _mapper;
+        private readonly IUserRoleService _userRoleService;
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
 
-        public CustomerService(IUnitOfWork unitOfWork, ICustomerRepository repository, IMapper mapper) : base(
+        public CustomerService(IUnitOfWork unitOfWork, ICustomerRepository repository, IMapper mapper, IUserRoleService userRoleService) : base(
             unitOfWork, repository)
         {
+            _userRoleService = userRoleService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -100,14 +104,28 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             var mapper = _mapper.CreateMapper();
             var customer = mapper.Map<Customer>(registerCustomerRequest);
-
             if (customerInDb == null)
             {
                 customer.Id = userId;
                 customer.CreatedAt = DateTimeOffset.Now;
                 customer.UpdatedAt = DateTimeOffset.Now;
 
-                await CreateAsyn(customer);
+                var transaction = await repository.BeginTransaction();
+                try
+                {
+                    await CreateAsyn(customer);
+                    await _userRoleService.CreateUserRole(new CreateUserRoleRequest
+                    {
+                        RoleId = "888",
+                        UserId = customer.Id
+                    });
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when registering a customer");
+                }
                 return;
             }
 
@@ -136,7 +154,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             customerInDb.LatitudeOfBirth = customerInRequest.LatitudeOfBirth;
             customerInDb.LongitudeOfBirth = customerInRequest.LongitudeOfBirth;
             customerInDb.TimeOfBirth = customerInRequest.TimeOfBirth;
-
+            
             await UpdateAsyn(customerInDb);
         }
 
@@ -151,7 +169,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             
             customer.DeletedAt = DateTimeOffset.Now;
 
-            await UpdateAsyn(customer);
+            var transaction = await repository.BeginTransaction();
+            try
+            {
+                await UpdateAsyn(customer);
+                await _userRoleService.DeleteAsyn(new UserRole { UserId = customer.Id, RoleId = "888" });
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when deleting a customer");
+            }
         }
     }
 }

@@ -86,6 +86,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 ExpiresAt = ((long)new DateTime(customClaims.Exp).ToUniversalTime().Subtract(
                     new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 ).TotalSeconds) * 1000,
+                IsRegister = customClaims.Roles.Length == 0,
             };
         }
     }

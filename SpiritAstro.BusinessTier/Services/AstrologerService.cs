@@ -11,6 +11,7 @@ using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using System.Linq.Dynamic.Core;
 using SpiritAstro.BusinessTier.Requests.Astrologer;
+using SpiritAstro.BusinessTier.Requests.UserRole;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 
@@ -34,12 +35,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial class AstrologerService
     {
         private readonly IConfigurationProvider _mapper;
+        private readonly IUserRoleService _userRoleService;
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
 
-        public AstrologerService(IUnitOfWork unitOfWork, IAstrologerRepository repository, IMapper mapper) : base(
+        public AstrologerService(IUnitOfWork unitOfWork, IAstrologerRepository repository, IMapper mapper, IUserRoleService userRoleService) : base(
             unitOfWork, repository)
         {
+            _userRoleService = userRoleService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -109,7 +112,22 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             {
                 astrologer.CreatedAt = DateTimeOffset.Now;
                 astrologer.UpdatedAt = DateTimeOffset.Now;
-                await CreateAsyn(astrologer);
+                var transaction = await repository.BeginTransaction();
+                try
+                {
+                    await CreateAsyn(astrologer);
+                    await _userRoleService.CreateUserRole(new CreateUserRoleRequest
+                    {
+                        UserId = astrologer.Id,
+                        RoleId = "8888"
+                    });
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when creating an astrologer");
+                }
                 return;
             }
             
@@ -156,7 +174,24 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             
             astrologer.DeletedAt = DateTimeOffset.Now;
 
-            await UpdateAsyn(astrologer);
+            
+
+            var transaction = await repository.BeginTransaction();
+            try
+            {
+                await UpdateAsyn(astrologer);
+                await _userRoleService.DeleteAsyn(new UserRole
+                {
+                    UserId = astrologer.Id,
+                    RoleId = "8888"
+                });
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when deleting an astrologer");
+            }
         }
     }
 }

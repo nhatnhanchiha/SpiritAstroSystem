@@ -20,7 +20,6 @@ namespace SpiritAstro.WebApi.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-        // private readonly IUserRoleService
 
         public CustomersController(ICustomerService customerService)
         {
@@ -68,7 +67,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpPost]
-        [CasbinAuthorize]
+        [CustomAuthorize]
         public async Task<IActionResult> RegisterACustomer([FromBody] RegisterCustomerRequest registerCustomerRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -78,7 +77,6 @@ namespace SpiritAstro.WebApi.Controllers
             try
             {
                 await _customerService.RegisterACustomer(userId, registerCustomerRequest);
-                // Todo: Create user role
                 return Ok(MyResponse<object>.OkWithMessage("Registered success"));
             }
             catch (ErrorResponse e)
@@ -122,7 +120,6 @@ namespace SpiritAstro.WebApi.Controllers
             try
             {
                 await _customerService.DeleteCustomer(id);
-                // Todo: Delete user role
                 return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
             }
             catch (ErrorResponse e)

@@ -15,6 +15,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     }
     public partial class CustomerService:BaseService<Customer>,ICustomerService
     {
-        public CustomerService(IUnitOfWork unitOfWork,ICustomerRepository repository):base(unitOfWork,repository){}
+        public CustomerService(IUnitOfWork unitOfWork,ICustomerRepository repository, IUserRoleService userRoleService):base(unitOfWork,repository)
+        {
+            _userRoleService = userRoleService;
+        }
     }
 }
