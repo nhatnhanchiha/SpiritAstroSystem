@@ -11,11 +11,12 @@ namespace SpiritAstro.BusinessTier.ViewModels.Zodiac
     {
         public static string[] Fields =
         {
-            "Id", "Name", "Description"
+            "Id", "Name", "Description", "Date"
         };
         public int? Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string UrlImage { get; set; }
+        public string Date { get; set; }
     }
 }
