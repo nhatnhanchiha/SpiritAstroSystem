@@ -19,6 +19,8 @@ namespace SpiritAstro.DataTier.Models
         public string Description { get; set; }
         public string UrlImage { get; set; }
 
+        public string Date { get; set; }
+
         public virtual ICollection<CustomerZodiac> CustomerZodiacs { get; set; }
         public virtual ICollection<FamousPerson> FamousPeople { get; set; }
         public virtual ICollection<PostZodiac> PostZodiacs { get; set; }
