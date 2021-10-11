@@ -11,7 +11,10 @@ namespace SpiritAstro.DataTier.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int ZodiacId { get; set; }
+        public string UrlImange { get; set; }
 
         public virtual Zodiac Zodiac { get; set; }
+
+        
     }
 }
