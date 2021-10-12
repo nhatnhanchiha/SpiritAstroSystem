@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SpiritAstro.BusinessTier.Commons.Attributes;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
+using SpiritAstro.BusinessTier.ViewModels.Zodiac;
 
 namespace SpiritAstro.BusinessTier.ViewModels.Post
 {
@@ -27,5 +28,6 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
         public long? CategoryId { get; set; }
         public long? AstrologerId { get; set; }
         public PublicAstrologerModel Astrologer { get; set; }
+        public List<ZodiacModel> Zodiacs { get; set; }
     }
 }
