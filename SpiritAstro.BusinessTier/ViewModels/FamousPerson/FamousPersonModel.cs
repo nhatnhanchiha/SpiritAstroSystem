@@ -20,7 +20,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.FamousPerson
         [String]
         public string Description { get; set; }
         public int? ZodiacId { get; set; }
-        public string UrlImange { get; set; }
+        public string UrlImage { get; set; }
     }
 
 
