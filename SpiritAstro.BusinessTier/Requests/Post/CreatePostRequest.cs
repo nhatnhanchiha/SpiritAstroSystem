@@ -10,6 +10,7 @@ namespace SpiritAstro.BusinessTier.Requests.Post
     {
         public string Title { get; set; }
         public string Content { get; set; }
+        public string ImageUrl { get; set; }
         public DateTimeOffset? CreatedAt { get; set; }
         public long CategoryId { get; set; }
     }

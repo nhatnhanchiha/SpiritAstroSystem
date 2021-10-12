@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SpiritAstro.BusinessTier.Commons.Attributes;
+using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 
 namespace SpiritAstro.BusinessTier.ViewModels.Post
 {
@@ -11,7 +12,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
     {
         public static string[] Fields =
         {
-            "Id", "Title", "Content", "CreatedAt", "IsApprove", "UpdatedAt", "DeletedAt", "CategoryId", "AstrologerId"
+            "Id", "Title", "Content", "CreatedAt", "IsApprove", "UpdatedAt", "DeletedAt", "CategoryId", "AstrologerId", "Astrologer"
         };
         public long? Id { get; set; }
         [String]
@@ -19,10 +20,12 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
         [String]
         public string Content { get; set; }
         public DateTimeOffset? CreatedAt { get; set; }
+        public string ImageUrl { get; set; }
         public bool? IsApprove { get; set; }
         public DateTimeOffset? UpdatedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
         public long? CategoryId { get; set; }
         public long? AstrologerId { get; set; }
+        public PublicAstrologerModel Astrologer { get; set; }
     }
 }
