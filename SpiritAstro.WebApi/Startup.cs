@@ -62,6 +62,8 @@ namespace SpiritAstro.WebApi
 
             services.ConfigureFilterServices();
 
+            services.ConfigureAstroChartServices();
+
             services.AddDbContext<SpiritAstroContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DbContext")));
         }
