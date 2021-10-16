@@ -2,6 +2,12 @@
 
 namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
 {
+    public class AstrologerInFollow
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+    }
+    
     public class AstrologerModel
     {
         public long Id { get; set; }
@@ -16,6 +22,8 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
         public DateTimeOffset? CreatedAt { get; set; }
         public DateTimeOffset? UpdatedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
     }
 
     public class PublicAstrologerModel
@@ -23,7 +31,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
         public static readonly string[] Fields =
         {
             "Id", "Name", "PhoneNumber", "Gender", "Status", "LatitudeOfBirth", "LongitudeOfBirth", "TimeOfBirth",
-            "DeletedAt"
+            "DeletedAt", "Description", "ImageUrl", "FollowersCount"
         };
         public long? Id { get; set; }
         public string Name { get; set; }
@@ -34,5 +42,8 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
         public double? LongitudeOfBirth { get; set; }
         public DateTimeOffset? TimeOfBirth { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
+        public int? FollowersCount { get; set; }
     }
 }

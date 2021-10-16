@@ -18,6 +18,6 @@ namespace SpiritAstro.BusinessTier.Services
             var bf = new StringBuilder();
             mySwissEphNet.Swisseph(bf);
             return NatalChartDataResponse.FromString(bf.ToString());
-        }    
+        }
     }
 }

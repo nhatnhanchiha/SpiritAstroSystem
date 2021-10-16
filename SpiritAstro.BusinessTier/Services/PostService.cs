@@ -32,23 +32,34 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
     public partial class PostService
     {
+        private const string CacheKey = "POST"; 
         private readonly IConfigurationProvider _mapper;
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
         private readonly IAccountService _accountService;
+        private readonly IRedisService _redisService;
 
         public PostService(IUnitOfWork unitOfWork, IPostRepository repository, IMapper mapper,
-            IAccountService accountService) : base(unitOfWork, repository)
+            IAccountService accountService, IRedisService redisService) : base(unitOfWork, repository)
         {
             _accountService = accountService;
+            _redisService = redisService;
             _mapper = mapper.ConfigurationProvider;
         }
 
         public async Task<PageResult<PostModel>> GetPosts(PostModel postFilter, string[] fields, string sort, int page,
             int limit)
         {
-            var (total, queryable) = Get().Where(p => p.DeletedAt == null).ProjectTo<PostModel>(_mapper)
+            var listPost = await _redisService.GetFromRedis<IList<PostModel>>(CacheKey);
+            if (listPost == null)
+            {
+                listPost = await Get().Where(p => p.DeletedAt == null).ProjectTo<PostModel>(_mapper).ToListAsync();
+                //cache 1 giờ thôi
+                await _redisService.CacheToRedis(CacheKey, listPost, TimeSpan.FromHours(1));
+            }
+            var (total, queryable) = listPost.AsQueryable()
                 .DynamicFilter(postFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            
             if (sort != null)
             {
                 queryable = queryable.OrderBy(sort);
@@ -62,7 +73,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             return new PageResult<PostModel>
             {
-                List = await queryable.ToListAsync(),
+                List = queryable.ToList(),
                 Page = page,
                 Limit = limit,
                 Total = total

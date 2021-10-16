@@ -2,6 +2,11 @@
 
 namespace SpiritAstro.BusinessTier.ViewModels.Customer
 {
+    public class CustomerInFollow
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+    }
     public class CustomerModel
     {
         public long Id { get; set; }

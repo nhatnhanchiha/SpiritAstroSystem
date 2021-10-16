@@ -28,6 +28,7 @@
       <PackageReference Include="Casbin.NET.Adapter.EFCore" Version="1.7.1" />
       <PackageReference Include="FirebaseAdmin" Version="2.2.0" />
       <PackageReference Include="Google.Cloud.Firestore" Version="2.4.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="SwissEphNet" Version="2.8.0.2" />

@@ -6,8 +6,14 @@ namespace SpiritAstro.BusinessTier.ViewModels.Follow
 {
     public class FollowModel
     {
-        public long AstrologerId { get; set; }
-        public long CustomerId { get; set; }
+        public static readonly string[] Fields =
+        {
+            "AstrologerId", "CustomerId", "Astrologer", "Customer"
+        };
+        public long? AstrologerId { get; set; }
+        public long? CustomerId { get; set; }
+        public AstrologerInFollow Astrologer;
+        public CustomerInFollow Customer;
     }
 
     public class FollowWithAstrologer

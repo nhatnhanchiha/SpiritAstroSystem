@@ -25,14 +25,30 @@ namespace SpiritAstro.WebApi.Controllers
             _followService = followService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] FollowModel filter, [FromQuery] string[] fields, string sort, int page, int limit)
+        {
+            try
+            {
+                var followList = await _followService.GetFollowList(filter, fields, sort, page, limit);
+                return Ok(MyResponse<PageResult<FollowModel>>.OkWithData(followList));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
+
         [HttpPost]
         [CasbinAuthorize]
         public async Task<IActionResult> Follow([FromBody] FollowRequest followRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
+
+            var customerId = claims!.UserId;
             try
             {
-                await _followService.Follow(followRequest.AstrologerId);
+                await _followService.Follow(customerId, followRequest.AstrologerId);
                 return Ok(MyResponse<object>.OkWithMessage("Followed success"));
             }
             catch (ErrorResponse e)
@@ -51,10 +67,11 @@ namespace SpiritAstro.WebApi.Controllers
         public async Task<IActionResult> GetFollowing(int page, int limit)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
+            var customerId = claims!.UserId;
 
             try
             {
-                var follows = await _followService.GetFollowings(page, limit);
+                var follows = await _followService.GetFollowings(customerId, page, limit);
                 return Ok(MyResponse<PageResult<FollowWithAstrologer>>.OkWithData(follows));
             }
             catch (ErrorResponse e)
@@ -71,16 +88,40 @@ namespace SpiritAstro.WebApi.Controllers
         public async Task<IActionResult> GetFollower(int page, int limit)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
+            var astrologerId = claims!.UserId;
 
             try
             {
-                var follows = await _followService.GetFollowers(page, limit);
+                var follows = await _followService.GetFollowers(astrologerId, page, limit);
                 return Ok(MyResponse<PageResult<FollowWithCustomer>>.OkWithData(follows));
             }
             catch (ErrorResponse e)
             {
                 return e.Error.Code switch
                 {
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
+        [HttpDelete]
+        [CasbinAuthorize]
+        public async Task<IActionResult> Unfollow([FromBody] UnfollowRequest unfollowRequest)
+        {
+            var claims = (CustomClaims)HttpContext.Items["claims"];
+            var customerId = claims!.UserId;
+
+            try
+            {
+                await _followService.Unfollow(customerId, unfollowRequest.AstrologerId);
+                return Ok(MyResponse<object>.OkWithMessage("Unfollow success"));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    (int)HttpStatusCode.NotFound => Ok(MyResponse<object>.FailWithMessage(e.Error.Message)),
+                    (int)HttpStatusCode.BadRequest => Ok(MyResponse<object>.FailWithMessage(e.Error.Message)),
                     _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
                 };
             }

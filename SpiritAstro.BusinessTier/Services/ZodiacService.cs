@@ -15,6 +15,7 @@ using SpiritAstro.BusinessTier.Requests.Zodiac;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Commons.Utils;
 using System.Linq.Dynamic.Core;
+using SpiritAstro.BusinessTier.ViewModels.Post;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {

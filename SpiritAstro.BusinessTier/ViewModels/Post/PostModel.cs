@@ -28,6 +28,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
         public long? CategoryId { get; set; }
         public long? AstrologerId { get; set; }
         public PublicAstrologerModel Astrologer { get; set; }
+        [Contain]
         public List<ZodiacModel> Zodiacs { get; set; }
     }
 }

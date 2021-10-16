@@ -14,6 +14,7 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
             mc.CreateMap<Follow, FollowWithCustomer>()
                 .ForMember(des => des.Customer, opt
                     => opt.MapFrom(src => src.Customer));
+            mc.CreateMap<Follow, FollowModel>();
         }
     }
 }

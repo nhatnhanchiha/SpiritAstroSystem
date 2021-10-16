@@ -22,7 +22,7 @@ namespace SpiritAstro.WebApi.Controllers
         {
             _zodiacService = famousPersonService;
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> GetListZodiac([FromQuery] ZodiacModel zodiacFilter, [FromQuery] string[] fields, string sort, int page, int limit)
         {
@@ -94,6 +94,13 @@ namespace SpiritAstro.WebApi.Controllers
 
                 return Ok(MyResponse<object>.FailWithMessage("Updated fail. " + e.Error.Message));
             }
+        }
+
+        [HttpGet("posts")]
+        public async Task<IActionResult> GetPostByZodiacIds([FromQuery] List<long> zodiacIds)
+        {
+            
+            return Ok();
         }
     }
 }

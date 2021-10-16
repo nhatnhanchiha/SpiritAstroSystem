@@ -21,7 +21,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPosts([FromQuery] PostModel postFilter,[FromQuery] string[] fields, string sort, int page, int limit)
+        public async Task<IActionResult> GetPosts([FromQuery] PostModel postFilter, [FromQuery] string[] fields, string sort, int page, int limit)
         {
             try
             {
