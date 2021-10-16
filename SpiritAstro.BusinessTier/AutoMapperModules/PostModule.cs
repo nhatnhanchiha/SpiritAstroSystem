@@ -16,7 +16,7 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
         {
             mc.CreateMap<CreatePostRequest, Post>();
             mc.CreateMap<Post, PostModel>()
-                .ForMember(des => des.Zodiacs, opt 
+                .ForMember(des => des.Zodiacs, opt
                     => opt.MapFrom(src => src.PostZodiacs.Select(pz => new Zodiac
                     {
                         Id = pz.Zodiac.Id,

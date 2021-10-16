@@ -95,12 +95,5 @@ namespace SpiritAstro.WebApi.Controllers
                 return Ok(MyResponse<object>.FailWithMessage("Updated fail. " + e.Error.Message));
             }
         }
-
-        [HttpGet("posts")]
-        public async Task<IActionResult> GetPostByZodiacIds([FromQuery] List<long> zodiacIds)
-        {
-            
-            return Ok();
-        }
     }
 }
