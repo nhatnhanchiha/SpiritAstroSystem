@@ -12,5 +12,7 @@ namespace SpiritAstro.BusinessTier.Requests.Astrologer
         public double LatitudeOfBirth { get; set; }
         public double LongitudeOfBirth { get; set; }
         public DateTimeOffset TimeOfBirth { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

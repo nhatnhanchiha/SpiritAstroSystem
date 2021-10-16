@@ -156,11 +156,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             astrologerInDb.Name = astrologerInRequest.Name;
             astrologerInDb.PhoneNumber = astrologerInRequest.PhoneNumber;
-            astrologerInDb.StatusPayment = astrologerInRequest.StatusPayment;
             astrologerInDb.Gender = astrologerInRequest.Gender;
             astrologerInDb.LatitudeOfBirth = astrologerInRequest.LatitudeOfBirth;
             astrologerInDb.LongitudeOfBirth = astrologerInRequest.LongitudeOfBirth;
             astrologerInDb.TimeOfBirth = astrologerInRequest.TimeOfBirth;
+            astrologerInDb.Description = astrologerInRequest.Description;
+            astrologerInDb.ImageUrl = astrologerInRequest.ImageUrl;
+
+            await UpdateAsyn(astrologerInDb);
         }
 
         public async Task DeleteAnAstrologer(long astrologerId)
