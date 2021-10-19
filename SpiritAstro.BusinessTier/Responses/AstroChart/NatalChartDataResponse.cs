@@ -14,7 +14,7 @@ namespace SpiritAstro.BusinessTier.Responses.AstroChart
         {
             var strings = data.Split("\n");
             var planets = new List<Planet>();
-            for (var i = 9; i < 23; i++)
+            for (var i = 9; i < 19; i++)
             {
                 planets.Add(Planet.FromString(strings[i]));    
             }
