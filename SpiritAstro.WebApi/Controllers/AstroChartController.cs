@@ -32,13 +32,13 @@ namespace SpiritAstro.WebApi.Controllers
             var zodiacPositionHouse = new ZodiacPositionHouse();
             zodiacPositionHouse.Initialize(natalChartDataResponse);
             
-            var bitmap = Bitmap.FromFile(@"Resources/background.jpg");
-            var g = Graphics.FromImage(bitmap);
+            var image = Image.FromFile(@"Resources/background.jpg");
+            var g = Graphics.FromImage(image);
             zodiacPositionHouse.Draw(g);
             g.Flush();
             
             var memoryStream = new MemoryStream();
-            bitmap.Save(memoryStream, ImageFormat.Png);
+            image.Save(memoryStream, ImageFormat.Png);
             
             var data = memoryStream.ToArray();
             return File(data, "image/png");
