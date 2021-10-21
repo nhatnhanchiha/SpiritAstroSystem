@@ -27,7 +27,6 @@ namespace SpiritAstro.WebApi.Controllers
         [CasbinAuthorize]
         public async Task<IActionResult> CreatePriceTable([FromBody] CreatePriceTableRequest createPriceTable)
         {
-
             try
             {
 
@@ -98,6 +97,4 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
     }
-
-   
 }

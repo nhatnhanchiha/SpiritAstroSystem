@@ -53,7 +53,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             var listPost = await _redisService.GetFromRedis<IList<PostModel>>(CacheKey);
             if (listPost == null)
             {
-                listPost = await Get().Where(p => p.DeletedAt == null).ProjectTo<PostModel>(_mapper).ToListAsync();
+                listPost = await Get().Where(p => p.DeletedAt == null).OrderByDescending(p => p.CreatedAt).Skip(0).Take(888).ProjectTo<PostModel>(_mapper).ToListAsync();
                 //cache 1 giờ thôi
                 await _redisService.CacheToRedis(CacheKey, listPost, TimeSpan.FromHours(1));
             }

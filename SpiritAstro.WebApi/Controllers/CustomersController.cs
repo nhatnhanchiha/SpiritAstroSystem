@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Customer;
 using SpiritAstro.BusinessTier.Responses;
-using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using SpiritAstro.BusinessTier.ViewModels.Customer;
 using SpiritAstro.WebApi.Attributes;
 
