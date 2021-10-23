@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Post;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Post;
 using System.Net;
 using System.Threading.Tasks;
+using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
@@ -34,6 +36,23 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
+        [HttpGet("admin")]
+        [CasbinAuthorize]
+        public async Task<IActionResult> GetPostsForAdmin([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
+            string sort, int page, int limit)
+        {
+            try
+            {
+                var posts = await _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
+                return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
+
+
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetPostById(long id)
         {
@@ -58,9 +77,12 @@ namespace SpiritAstro.WebApi.Controllers
         public async Task<IActionResult> CreateNewPost(
             [FromBody] CreatePostRequest createPostRequest)
         {
+            var claims = (CustomClaims)HttpContext.Items["claims"];
+
+            var id = claims!.UserId;
             try
             {
-                var postId = await _postService.CreatePost(createPostRequest);
+                var postId = await _postService.CreatePost(createPostRequest, id);
                 return Ok(MyResponse<long>.OkWithDetail(postId,
                     $"Created success post with id = {postId}"));
             }
@@ -98,6 +120,26 @@ namespace SpiritAstro.WebApi.Controllers
             {
                 await _postService.DeletePost(id);
                 return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
+            }
+            catch (ErrorResponse e)
+            {
+                if (e.Error.Code == (int)HttpStatusCode.NotFound)
+                {
+                    return Ok(MyResponse<object>.FailWithMessage("Deleted fail. " + e.Error.Message));
+                }
+
+                return Ok(MyResponse<object>.FailWithMessage("Deleted fail. " + e.Error.Message));
+            }
+        }
+
+        [HttpPatch("approve")]
+        [CasbinAuthorize]
+        public async Task<IActionResult> Approve([FromQuery] long id)
+        {
+            try
+            {
+                await _postService.Approve(id);
+                return Ok(MyResponse<object>.OkWithMessage("Approved success"));
             }
             catch (ErrorResponse e)
             {

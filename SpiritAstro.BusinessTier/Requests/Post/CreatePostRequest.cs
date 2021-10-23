@@ -13,5 +13,6 @@ namespace SpiritAstro.BusinessTier.Requests.Post
         public string ImageUrl { get; set; }
         public DateTimeOffset? CreatedAt { get; set; }
         public long CategoryId { get; set; }
+        public List<int> ZodiacIds { get; set; }
     }
 }

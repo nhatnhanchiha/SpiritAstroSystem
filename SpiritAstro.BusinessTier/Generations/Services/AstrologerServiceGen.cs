@@ -15,9 +15,6 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     }
     public partial class AstrologerService:BaseService<Astrologer>,IAstrologerService
     {
-        public AstrologerService(IUnitOfWork unitOfWork,IAstrologerRepository repository, IUserRoleService userRoleService):base(unitOfWork,repository)
-        {
-            _userRoleService = userRoleService;
-        }
+        public AstrologerService(IUnitOfWork unitOfWork,IAstrologerRepository repository):base(unitOfWork,repository){}
     }
 }

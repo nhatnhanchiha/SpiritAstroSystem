@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Canvas_SWD;
 using SpiritAstro.BusinessTier.Responses.AstroChart;
 
 namespace SpiritAstro.BusinessTier.Commons.Toolkit.Zodiac

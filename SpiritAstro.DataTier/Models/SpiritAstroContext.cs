@@ -34,6 +34,7 @@ namespace SpiritAstro.DataTier.Models
         public virtual DbSet<PostZodiac> PostZodiacs { get; set; }
         public virtual DbSet<PriceTable> PriceTables { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Token> Tokens { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
@@ -414,6 +415,24 @@ namespace SpiritAstro.DataTier.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<Token>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("Token_pk")
+                    .IsClustered(false);
+
+                entity.ToTable("Token");
+
+                entity.Property(e => e.TokenString)
+                    .HasMaxLength(255)
+                    .HasColumnName("TokenString");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Tokens)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("Token_User_Id_fk");
             });
 
             modelBuilder.Entity<Transaction>(entity =>

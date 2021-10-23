@@ -71,6 +71,9 @@ namespace SpiritAstro.BusinessTier.Generations.DependencyInjection
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IRoleRepository, RoleRepository>();
         
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
+        
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
         

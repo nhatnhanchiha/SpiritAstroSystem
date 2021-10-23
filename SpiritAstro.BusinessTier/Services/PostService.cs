@@ -23,11 +23,12 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial interface IPostService
     {
         Task<PageResult<PostModel>> GetPosts(PostModel postFilter, string[] fields, string sort, int page, int limit);
+        Task<PageResult<PostModel>> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit);
         Task<PostModel> GetPostById(long postId);
-        Task<long> CreatePost(CreatePostRequest createPostRequest);
+        Task<long> CreatePost(CreatePostRequest createPostRequest, long astrologerId);
         Task UpdatePost(long postId, UpdatePostRequest updatePostRequest);
-
         Task DeletePost(long postId);
+        Task Approve(long postId);
     }
 
     public partial class PostService
@@ -54,8 +55,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             if (listPost == null)
             {
                 listPost = await Get().Where(p => p.DeletedAt == null).OrderByDescending(p => p.CreatedAt).Skip(0).Take(888).ProjectTo<PostModel>(_mapper).ToListAsync();
-                //cache 1 giờ thôi
-                await _redisService.CacheToRedis(CacheKey, listPost, TimeSpan.FromHours(1));
+                //cache 5 phút thôi
+                await _redisService.CacheToRedis(CacheKey, listPost, TimeSpan.FromMinutes(5));
             }
             var (total, queryable) = listPost.AsQueryable()
                 .DynamicFilter(postFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
@@ -80,9 +81,34 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             };
         }
 
+        public async Task<PageResult<PostModel>> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit)
+        {
+            var (total, queryable) = Get().Where(p => p.DeletedAt == null).ProjectTo<PostModel>(_mapper)
+                .DynamicFilter(postFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<PostModel>(PostModel.Fields.Intersect(fields).ToArray()
+                    .ToDynamicSelector<PostModel>());
+            }
+
+            return new PageResult<PostModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Limit = limit,
+                Total = total
+            };
+        }
+
         public async Task<PostModel> GetPostById(long postId)
         {
-            var postModel = await Get().Where(p => p.Id == postId).ProjectTo<PostModel>(_mapper).FirstOrDefaultAsync();
+            var postModel = await Get().Where(p => p.Id == postId && p.DeletedAt == null).ProjectTo<PostModel>(_mapper).FirstOrDefaultAsync();
             if (postModel == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
@@ -92,12 +118,11 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             return postModel;
         }
 
-        public async Task<long> CreatePost(CreatePostRequest createPostRequest)
+        public async Task<long> CreatePost(CreatePostRequest createPostRequest, long astrologerId)
         {
             var mapper = _mapper.CreateMapper();
             var post = mapper.Map<Post>(createPostRequest);
 
-            var astrologerId = _accountService.GetAstrologerId();
             post.AstrologerId = astrologerId;
 
             post.CreatedAt = DateTimeOffset.Now;
@@ -154,6 +179,20 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             postInDb.DeletedAt = DateTimeOffset.Now;
 
             await UpdateAsyn(postInDb);
+        }
+
+        public async Task Approve(long postId)
+        {
+            var post = await Get().Where(p => p.Id == postId && p.DeletedAt == null).FirstOrDefaultAsync();
+            if (post == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any post matches with id = {postId}");
+            }
+
+            post.IsApprove = true;
+
+            await UpdateAsyn(post);
         }
     }
 }

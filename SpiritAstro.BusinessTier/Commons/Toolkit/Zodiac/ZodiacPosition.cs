@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using Canvas_SWD;
 
 namespace SpiritAstro.BusinessTier.Commons.Toolkit.Zodiac
 {

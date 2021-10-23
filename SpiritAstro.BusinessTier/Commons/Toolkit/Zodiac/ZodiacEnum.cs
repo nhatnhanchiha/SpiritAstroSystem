@@ -1,4 +1,4 @@
-﻿namespace Canvas_SWD
+﻿namespace SpiritAstro.BusinessTier.Commons.Toolkit.Zodiac
 {
     public enum ZodiacEnum
     {
