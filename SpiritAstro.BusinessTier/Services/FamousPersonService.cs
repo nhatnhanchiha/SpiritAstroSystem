@@ -93,7 +93,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             famousPersonInDb.Name = famousPersonInRequest.Name;
             famousPersonInDb.Description = famousPersonInRequest.Description;
-            famousPersonInDb.Zodiac = famousPersonInRequest.Zodiac;
+            famousPersonInDb.ZodiacId = famousPersonInRequest.ZodiacId;
+            famousPersonInDb.UrlImage = famousPersonInRequest.UrlImage;
 
             await UpdateAsyn(famousPersonInDb);
         }
