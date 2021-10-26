@@ -51,6 +51,25 @@ namespace SpiritAstro.WebApi.Controllers
                 return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
             }
         }
+        
+        [HttpGet("astrologer")]
+        [CasbinAuthorize]
+        public async Task<IActionResult> GetPostsForAstrologer([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
+            string sort, int page, int limit)
+        {
+            try
+            {
+                var claims = (CustomClaims)HttpContext.Items["claims"];
+                var id = claims!.UserId;
+                postFilter.AstrologerId = id;
+                var posts = await _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
+                return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
 
 
         [HttpGet("{id:long}")]
@@ -98,7 +117,14 @@ namespace SpiritAstro.WebApi.Controllers
         {
             try
             {
-                await _postService.UpdatePost(id, updatePostRequest);
+                var claims = (CustomClaims)HttpContext.Items["claims"];
+                var userId = claims!.UserId;
+                if (!claims.Roles.Contains("8888"))
+                {
+                    userId = 0;
+                }
+                
+                await _postService.UpdatePost(userId, id, updatePostRequest);
                 return Ok(MyResponse<object>.OkWithMessage("Updated success"));
             }
             catch (ErrorResponse e)
@@ -118,7 +144,14 @@ namespace SpiritAstro.WebApi.Controllers
         {
             try
             {
-                await _postService.DeletePost(id);
+                var claims = (CustomClaims)HttpContext.Items["claims"];
+                var userId = claims!.UserId;
+                if (!claims.Roles.Contains("8888"))
+                {
+                    userId = 0;
+                }
+                
+                await _postService.DeletePost(userId, id);
                 return Ok(MyResponse<object>.OkWithMessage("Deleted success"));
             }
             catch (ErrorResponse e)

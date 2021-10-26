@@ -26,8 +26,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<PageResult<PostModel>> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit);
         Task<PostModel> GetPostById(long postId);
         Task<long> CreatePost(CreatePostRequest createPostRequest, long astrologerId);
-        Task UpdatePost(long postId, UpdatePostRequest updatePostRequest);
-        Task DeletePost(long postId);
+        Task UpdatePost(long userId, long postId, UpdatePostRequest updatePostRequest);
+        Task DeletePost(long userId, long postId);
         Task Approve(long postId);
     }
 
@@ -132,48 +132,48 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             return post.Id;
         }
 
-        public async Task UpdatePost(long postId, UpdatePostRequest updatePostRequest)
+        public async Task UpdatePost(long userId, long postId, UpdatePostRequest updatePostRequest)
         {
-            var postInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == postId);
+            var postInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == postId && fp.DeletedAt == null);
             if (postInDb == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
                     $"Cannot find any post matches with id = {postId}");
             }
+            
+
 
             var mapper = _mapper.CreateMapper();
             var postInRequest = mapper.Map<Post>(updatePostRequest);
-
-            var astrologerId = _accountService.GetAstrologerId();
-
-            if (astrologerId != postInDb.AstrologerId)
+            
+            if (userId != 0 && userId != postInDb.AstrologerId)
             {
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Insufficient permissions");
             }
-
+            
             postInDb.Title = postInRequest.Title;
             postInDb.Content = postInRequest.Content;
             postInDb.CategoryId = postInRequest.CategoryId;
+            postInDb.ImageUrl = postInRequest.ImageUrl;
             postInDb.UpdatedAt = DateTimeOffset.Now;
 
             await UpdateAsyn(postInDb);
         }
 
-        public async Task DeletePost(long postId)
+        public async Task DeletePost(long userId, long postId)
         {
             var postInDb = await Get().FirstOrDefaultAsync(fp => fp.Id == postId);
-
-            var astrologerId = _accountService.GetAstrologerId();
-
-            if (astrologerId != postInDb.AstrologerId)
-            {
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Insufficient permissions");
-            }
-
+            
             if (postInDb == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
                     $"Cannot find any post matches with id = {postId}");
+            }
+
+
+            if (userId != 0 && userId != postInDb.AstrologerId)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Insufficient permissions");
             }
 
             postInDb.DeletedAt = DateTimeOffset.Now;
