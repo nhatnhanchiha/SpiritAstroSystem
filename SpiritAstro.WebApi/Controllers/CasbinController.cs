@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Casbin;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Services;
+using SpiritAstro.DataTier.Models;
 using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
@@ -16,10 +18,21 @@ namespace SpiritAstro.WebApi.Controllers
     public class CasbinController : ControllerBase
     {
         private readonly ICasbinService _casbinService;
+        private readonly ICasbinRuleService _casbinRuleService;
 
-        public CasbinController(ICasbinService casbinService)
+        public CasbinController(ICasbinService casbinService, ICasbinRuleService casbinRuleService)
         {
             _casbinService = casbinService;
+            _casbinRuleService = casbinRuleService;
+        }
+
+
+        [HttpGet]
+        [CasbinAuthorize]
+        public async Task<IActionResult> GetAllPolicy([FromQuery] int page, [FromQuery] int limit)
+        {
+            var casbinRules = await _casbinRuleService.GetCasbinRules(page, limit);
+            return Ok(MyResponse<PageResult<CasbinRule>>.OkWithData(casbinRules));
         }
 
         [HttpPost]

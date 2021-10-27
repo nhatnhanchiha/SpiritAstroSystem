@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using System.Net;
 using AutoMapper.QueryableExtensions;
 using SpiritAstro.BusinessTier.Commons.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     {
         Task<long> CreateUserRole(CreateUserRoleRequest createUserRoleZodiac);
         Task<PageResult<UserRoleModel>> GetListUserRole(UserRoleModel userRoleFilter, int page, int limit, string sort, string[] fields);
+        Task DeleteUserRole(DeleteUserRoleRequest deleteUserRoleRequest);
+
     }
     public partial class UserRoleService
     {
@@ -62,6 +65,19 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 Limit = limit,
                 Total = total,
             };
+        }
+
+        public async Task DeleteUserRole(DeleteUserRoleRequest deleteUserRoleRequest)
+        {
+            var userRole = await Get().Where(ur => ur.UserId == deleteUserRoleRequest.UserId && ur.RoleId == deleteUserRoleRequest.RoleId)
+                .FirstOrDefaultAsync();
+
+            if (userRole == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot find");
+            }
+
+            await DeleteAsyn(userRole);
         }
     }
 }

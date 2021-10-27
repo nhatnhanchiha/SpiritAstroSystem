@@ -55,5 +55,20 @@ namespace SpiritAstro.WebApi.Controllers
                 };
             }
         }
+
+        [HttpDelete]
+        [CasbinAuthorize]
+        public async Task<IActionResult> DeleteUserRole([FromBody] DeleteUserRoleRequest deleteUserRoleRequest)
+        {
+            try
+            {
+                await _userRoleService.DeleteUserRole(deleteUserRoleRequest);
+                return Ok(MyResponse<long>.OkWithMessage("Deleted success"));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
     }
 }
