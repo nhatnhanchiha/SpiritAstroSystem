@@ -27,6 +27,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("non-astro")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetListNonAstrologerNoPaging()
         {
             return Ok(await _userService.GetNonAstrologerNoPaging());
