@@ -30,6 +30,7 @@ namespace SpiritAstro.WebApi.AppStart
                 mc.ConfigPlanetMapperModule();
                 mc.ConfigFieldDetailMapperModule();
                 mc.ConfigTokenMapperModule();
+                mc.ConfigUserMapperModule();
             });
             var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

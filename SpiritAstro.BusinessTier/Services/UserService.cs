@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -12,24 +15,36 @@ using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
+using SpiritAstro.BusinessTier.ViewModels.Users;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     public partial interface IUserService
     {
         Task<LoginResponse> Login(string uid);
+        Task<List<UserModel>> GetNonAstrologerNoPaging();
     }
 
     public partial class UserService
     {
         private readonly IConfiguration _configuration;
+        private readonly IConfigurationProvider _mapper;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository repository, IConfiguration configuration) : base(
+        public UserService(IUnitOfWork unitOfWork, IUserRepository repository, IConfiguration configuration,
+            IMapper mapper) : base(
             unitOfWork, repository)
         {
             _configuration = configuration;
+            _mapper = mapper.ConfigurationProvider;
+        }
+
+        public async Task<List<UserModel>> GetNonAstrologerNoPaging()
+        {
+            return await Get().Include(u => u.UserRoles).Where(u => !u.UserRoles.Select(ur => ur.RoleId).Contains("8888")).ProjectTo<UserModel>(_mapper)
+                .ToListAsync();
         }
 
         public async Task<LoginResponse> Login(string uid)
@@ -49,10 +64,10 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
                 user = userInReq;
             }
-            
+
             return GenerateJwtToken(user);
         }
-        
+
 
         private LoginResponse GenerateJwtToken(User user)
         {
@@ -82,7 +97,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             return new LoginResponse
             {
                 UserId = user.Id,
-                Name = user.Customer == null ? user.Astrologer == null ? "Unknown user" : user.Astrologer.Name : user.Customer.Name,
+                Name = user.Customer == null
+                    ? user.Astrologer == null ? "Unknown user" : user.Astrologer.Name
+                    : user.Customer.Name,
                 Roles = customClaims.Roles,
                 Token = tokenString,
                 BufferTime = customClaims.BufferTime * 1000,

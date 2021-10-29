@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Post;
@@ -119,7 +120,8 @@ namespace SpiritAstro.WebApi.Controllers
             {
                 var claims = (CustomClaims)HttpContext.Items["claims"];
                 var userId = claims!.UserId;
-                if (!claims.Roles.Contains("8888"))
+                
+                if (!claims.Roles.Split(",").Contains("8888"))
                 {
                     userId = 0;
                 }
@@ -146,7 +148,7 @@ namespace SpiritAstro.WebApi.Controllers
             {
                 var claims = (CustomClaims)HttpContext.Items["claims"];
                 var userId = claims!.UserId;
-                if (!claims.Roles.Contains("8888"))
+                if (!claims.Roles.Split(",").Contains("8888"))
                 {
                     userId = 0;
                 }

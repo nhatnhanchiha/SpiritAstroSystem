@@ -26,6 +26,12 @@ namespace SpiritAstro.WebApi.Controllers
             _userService = userService;
         }
 
+        [HttpGet("non-astro")]
+        public async Task<IActionResult> GetListNonAstrologerNoPaging()
+        {
+            return Ok(await _userService.GetNonAstrologerNoPaging());
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginWithToken([FromBody] LoginRequest loginRequest)
         {

@@ -15,7 +15,10 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
         public static void ConfigUserRoleMapperModule(this IMapperConfigurationExpression mc)
         {
             mc.CreateMap<CreateUserRoleRequest, UserRole>();
-            mc.CreateMap<UserRole, UserRoleModel>().ReverseMap();
+            mc.CreateMap<UserRole, UserRoleModel>()
+                .ForMember(des => des.User, opt => opt.MapFrom(
+                    src => src.User));
+            mc.CreateMap<UserRoleModel, UserRole>();
             mc.CreateMap<UpdateUserRoleRequest, UserRole>();
         }
     }
