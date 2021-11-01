@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net;
+using System.Linq.Dynamic.Core;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.BusinessTier.Generations.Repositories;
-using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.User;
 using SpiritAstro.BusinessTier.ViewModels.Users;
 using SpiritAstro.DataTier.BaseConnect;
@@ -43,7 +42,11 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task<List<UserModel>> GetNonAstrologerNoPaging()
         {
-            return await Get().Include(u => u.UserRoles).Where(u => !u.UserRoles.Select(ur => ur.RoleId).Contains("8888")).ProjectTo<UserModel>(_mapper)
+            return await Get().Include(u => u.UserRoles)
+                .Include(u => u.Astrologer)
+                .Where(u => u.Astrologer == null)
+                .Where(u => !u.UserRoles.Select(ur => ur.RoleId).Contains("8888"))
+                .ProjectTo<UserModel>(_mapper)
                 .ToListAsync();
         }
 

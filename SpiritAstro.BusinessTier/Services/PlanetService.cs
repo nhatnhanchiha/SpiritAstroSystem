@@ -92,8 +92,11 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             
             var mapper = _mapper.CreateMapper();
             var planet = mapper.Map<Planet>(updatePlanetRequest);
+            planetInDb.Name = planet.Name;
+            planetInDb.Description = planet.Description;
+            planetInDb.ImageUrl = planet.ImageUrl;
 
-            await UpdateAsyn(planet);
+            await UpdateAsyn(planetInDb);
         }
 
         public async Task DeletePlanetById(long planetId)

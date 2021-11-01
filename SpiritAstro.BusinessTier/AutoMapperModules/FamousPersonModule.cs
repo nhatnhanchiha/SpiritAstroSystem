@@ -15,7 +15,10 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
         public static void ConfigFamousPersonMapperModule(this IMapperConfigurationExpression mc)
         {
             mc.CreateMap<CreateFamousPersonRequest, FamousPerson>();
-            mc.CreateMap<FamousPerson, FamousPersonModel>().ReverseMap();
+            mc.CreateMap<FamousPerson, FamousPersonModel>()
+                .ForMember(des => des.ZodiacName, opt 
+                => opt.MapFrom(src => src.Zodiac.Name));
+            mc.CreateMap<FamousPersonModel, FamousPerson>();
             mc.CreateMap<UpdateFamousPersonRequest, FamousPerson>();
         }
     }

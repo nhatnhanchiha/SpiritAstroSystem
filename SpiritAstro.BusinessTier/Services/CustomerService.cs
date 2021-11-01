@@ -170,15 +170,23 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             customer.DeletedAt = DateTimeOffset.Now;
 
             var transaction = await repository.BeginTransaction();
+            UserRole ur = null;
             try
             {
                 await UpdateAsyn(customer);
-                await _userRoleService.DeleteAsyn(new UserRole { UserId = customer.Id, RoleId = "888" });
+                ur = await _userRoleService.Get().Where(userRole => userRole.UserId == customer.Id && userRole.RoleId == "888").FirstOrDefaultAsync();
+                
+                await _userRoleService.DeleteAsyn(ur);
                 await transaction.CommitAsync();
             }
             catch (Exception)
             {
                 await transaction.RollbackAsync();
+                if (ur == null)
+                {
+                    throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                        $"This user is baned");
+                }
                 throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when deleting a customer");
             }
         }

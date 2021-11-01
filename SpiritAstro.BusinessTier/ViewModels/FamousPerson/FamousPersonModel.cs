@@ -11,7 +11,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.FamousPerson
     {
         public static string[] Fields =
         {
-            "Id", "Name", "Description"
+            "Id", "Name", "Description", "ZodiacId", "UrlImage", "Gender"
         };
 
         public long? Id { get; set; }
@@ -20,8 +20,8 @@ namespace SpiritAstro.BusinessTier.ViewModels.FamousPerson
         [String]
         public string Description { get; set; }
         public int? ZodiacId { get; set; }
+        public string ZodiacName { get; set; }
         public string UrlImage { get; set; }
+        public short? Gender { get; set; }
     }
-
-
 }
