@@ -58,7 +58,16 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 //cache 5 phút thôi
                 await _redisService.CacheToRedis(CacheKey, listPost, TimeSpan.FromMinutes(5));
             }
-            var (total, queryable) = listPost.AsQueryable()
+
+            var queryable = listPost.AsQueryable();
+            int total;
+            
+            if (postFilter.ZodiacIds is { Count: > 0 })
+            {
+                queryable = queryable.Where(p => p.Zodiacs.Any(z => postFilter.ZodiacIds.Contains(z.Id!.Value)));
+            }
+            
+            (total, queryable) = queryable
                 .DynamicFilter(postFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
             
             if (sort != null)

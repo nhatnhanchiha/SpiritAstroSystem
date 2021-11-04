@@ -27,6 +27,8 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
         public DateTimeOffset? DeletedAt { get; set; }
         public long? CategoryId { get; set; }
         public long? AstrologerId { get; set; }
+        [Skip]
+        public List<int> ZodiacIds { get; set; }
         public PublicAstrologerModel Astrologer { get; set; }
         public List<ZodiacModel> Zodiacs { get; set; }
     }
