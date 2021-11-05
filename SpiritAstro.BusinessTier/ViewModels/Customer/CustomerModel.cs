@@ -30,7 +30,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
     public class PublicCustomerModel
     {
         public static string[] Fields =
-            { "Id", "Name", "PhoneNumber", "Gender", "Status", "LatitudeOfBirth", "LongitudeOfBirth", "TimeOfBirth" };
+            { "Id", "Name", "PhoneNumber", "Gender", "Status", "LatitudeOfBirth", "LongitudeOfBirth", "TimeOfBirth", "PlaceOfBirth" };
         public long? Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
@@ -41,12 +41,13 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
         public DateTimeOffset? TimeOfBirth { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
         public string UrlImage { get; set; }
+        public string PlaceOfBirth { get; set; }
     }
 
     public class PublicCustomerModelForAdmin
     {
         public static string[] Fields =
-            { "Id", "Name", "PhoneNumber", "Gender", "Status", "LatitudeOfBirth", "LongitudeOfBirth", "TimeOfBirth" };
+            { "Id", "Name", "PhoneNumber", "Gender", "Status", "LatitudeOfBirth", "LongitudeOfBirth", "TimeOfBirth", "PlaceOfBirth" };
         public long? Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
@@ -57,6 +58,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
         public DateTimeOffset? TimeOfBirth { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
         public string UrlImage { get; set; }
+        public string PlaceOfBirth { get; set; }
         [Skip]
         public bool? IsDeleted { get; set; }
 
