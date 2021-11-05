@@ -23,7 +23,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial interface IPostService
     {
         Task<PageResult<PostModel>> GetPosts(PostModel postFilter, string[] fields, string sort, int page, int limit);
-        Task<PageResult<PostModel>> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit);
+        PageResult<PostModel> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit);
         Task<PostModel> GetPostById(long postId);
         Task<long> CreatePost(CreatePostRequest createPostRequest, long astrologerId);
         Task UpdatePost(long userId, long postId, UpdatePostRequest updatePostRequest);
@@ -90,9 +90,17 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             };
         }
 
-        public async Task<PageResult<PostModel>> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit)
+        public PageResult<PostModel> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit)
         {
-            var (total, queryable) = Get().Where(p => p.DeletedAt == null).ProjectTo<PostModel>(_mapper)
+            var queryable =  Get().Where(p => p.DeletedAt == null).OrderByDescending(p => p.CreatedAt).Skip(0).Take(888).ProjectTo<PostModel>(_mapper);
+            int total;
+            
+            if (postFilter.ZodiacIds is { Count: > 0 })
+            {
+                queryable = queryable.Where(p => p.Zodiacs.Any(z => postFilter.ZodiacIds.Contains(z.Id!.Value)));
+            }
+            
+            (total, queryable) = queryable
                 .DynamicFilter(postFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
             
             if (sort != null)
@@ -108,7 +116,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             return new PageResult<PostModel>
             {
-                List = await queryable.ToListAsync(),
+                List = queryable.ToList(),
                 Page = page,
                 Limit = limit,
                 Total = total

@@ -24,14 +24,18 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<PageResult<PublicAstrologerModel>> GetAllAstrologers(PublicAstrologerModel filter, string[] fields,
             string sort, int page, int limit);
 
+        Task<PageResult<PublicAstrologerModelForAdmin>> GetAllAstrologersForAdmin(PublicAstrologerModelForAdmin filter,
+            string[] fields,
+            string sort, int page, int limit);
+
         Task<PublicAstrologerModel> GetPublicAstrologerById(long astrologerId);
         Task<AstrologerModel> GetAstrologerById(long astrologerId);
         Task RegisterAnAstrologer(RegisterAstrologerRequest registerAstrologerRequest);
         Task UpdateAnAstrologer(long astrologerId, UpdateAstrologerRequest updateAstrologerRequest);
 
         Task DeleteAnAstrologer(long astrologerId);
-
     }
+
     public partial class AstrologerService
     {
         private readonly IConfigurationProvider _mapper;
@@ -39,7 +43,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
 
-        public AstrologerService(IUnitOfWork unitOfWork, IAstrologerRepository repository, IMapper mapper, IUserRoleService userRoleService) : base(
+        public AstrologerService(IUnitOfWork unitOfWork, IAstrologerRepository repository, IMapper mapper,
+            IUserRoleService userRoleService) : base(
             unitOfWork, repository)
         {
             _userRoleService = userRoleService;
@@ -56,9 +61,11 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             }
         }
 
-        public async Task<PageResult<PublicAstrologerModel>> GetAllAstrologers(PublicAstrologerModel filter, string[] fields, string sort, int page, int limit)
+        public async Task<PageResult<PublicAstrologerModel>> GetAllAstrologers(PublicAstrologerModel filter,
+            string[] fields, string sort, int page, int limit)
         {
-            var (total, queryable) = Get().Where(a => a.DeletedAt == null).ProjectTo<PublicAstrologerModel>(_mapper).DynamicFilter(filter)
+            var (total, queryable) = Get().Where(a => a.DeletedAt == null).ProjectTo<PublicAstrologerModel>(_mapper)
+                .DynamicFilter(filter)
                 .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
             if (sort != null)
             {
@@ -67,7 +74,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             if (fields.Length > 0)
             {
-                queryable = queryable.Select<PublicAstrologerModel>(PublicAstrologerModel.Fields.Intersect(fields).ToArray()
+                queryable = queryable.Select<PublicAstrologerModel>(PublicAstrologerModel.Fields.Intersect(fields)
+                    .ToArray()
                     .ToDynamicSelector<PublicAstrologerModel>());
             }
 
@@ -80,12 +88,45 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             };
         }
 
+        public async Task<PageResult<PublicAstrologerModelForAdmin>> GetAllAstrologersForAdmin(
+            PublicAstrologerModelForAdmin filter, string[] fields, string sort, int page, int limit)
+        {
+            var (total, queryable) = Get()
+                .Where(a => filter.IsDeleted == null || ((bool)filter.IsDeleted
+                    ? a.DeletedAt != null
+                    : a.DeletedAt == null)).ProjectTo<PublicAstrologerModelForAdmin>(_mapper).DynamicFilter(filter)
+                .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+
+
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<PublicAstrologerModelForAdmin>(PublicAstrologerModelForAdmin.Fields
+                    .Intersect(fields).ToArray()
+                    .ToDynamicSelector<PublicAstrologerModelForAdmin>());
+            }
+
+            return new PageResult<PublicAstrologerModelForAdmin>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Limit = limit,
+                Total = total
+            };
+        }
+
         public async Task<PublicAstrologerModel> GetPublicAstrologerById(long astrologerId)
         {
-            var astrologer = await Get().ProjectTo<PublicAstrologerModel>(_mapper).FirstOrDefaultAsync(a => a.Id == astrologerId && a.DeletedAt == null);
+            var astrologer = await Get().ProjectTo<PublicAstrologerModel>(_mapper)
+                .FirstOrDefaultAsync(a => a.Id == astrologerId && a.DeletedAt == null);
             if (astrologer == null)
             {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any astrologer matches id = {astrologerId}");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any astrologer matches id = {astrologerId}");
             }
 
             return astrologer;
@@ -93,10 +134,12 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task<AstrologerModel> GetAstrologerById(long astrologerId)
         {
-            var astrologer = await Get().ProjectTo<AstrologerModel>(_mapper).FirstOrDefaultAsync(a => a.Id == astrologerId && a.DeletedAt == null);
+            var astrologer = await Get().ProjectTo<AstrologerModel>(_mapper)
+                .FirstOrDefaultAsync(a => a.Id == astrologerId && a.DeletedAt == null);
             if (astrologer == null)
             {
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, $"Cannot find any astrologer matches with id = {astrologerId}");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any astrologer matches with id = {astrologerId}");
             }
 
             return astrologer;
@@ -126,12 +169,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 catch (Exception)
                 {
                     await transaction.RollbackAsync();
-                    throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when creating an astrologer");
+                    throw new ErrorResponse((int)HttpStatusCode.InternalServerError,
+                        "Error when creating an astrologer");
                 }
+
                 return;
             }
-            
-            
+
+
             if (astrologerInDb.DeletedAt == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This user has been an astrologer already!");
@@ -174,10 +219,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,
                     $"Cannot find any astrologer matches with id = {astrologerId}");
             }
-            
+
             astrologer.DeletedAt = DateTimeOffset.Now;
 
-            
 
             var transaction = await repository.BeginTransaction();
             try

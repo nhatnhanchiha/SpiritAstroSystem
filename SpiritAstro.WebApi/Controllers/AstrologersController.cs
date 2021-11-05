@@ -17,9 +17,10 @@ namespace SpiritAstro.WebApi.Controllers
         private readonly IAstrologerService _astrologerService;
         private readonly IUserRoleService _userRoleService;
 
-        public AstrologersController(IAstrologerService astrologerService)
+        public AstrologersController(IAstrologerService astrologerService, IUserRoleService userRoleService)
         {
             _astrologerService = astrologerService;
+            _userRoleService = userRoleService;
         }
 
         [HttpGet]
@@ -30,6 +31,21 @@ namespace SpiritAstro.WebApi.Controllers
             {
                 var astrologers = await _astrologerService.GetAllAstrologers(filter, fields, sort, page, limit);
                 return Ok(MyResponse<PageResult<PublicAstrologerModel>>.OkWithData(astrologers));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
+        
+        [HttpGet("admin")]
+        public async Task<IActionResult> GetAllAstrologersForAdmin([FromQuery] PublicAstrologerModelForAdmin filter,
+            [FromQuery] string[] fields, string sort, int page, int limit)
+        {
+            try
+            {
+                var astrologers = await _astrologerService.GetAllAstrologersForAdmin(filter, fields, sort, page, limit);
+                return Ok(MyResponse<PageResult<PublicAstrologerModelForAdmin>>.OkWithData(astrologers));
             }
             catch (ErrorResponse e)
             {

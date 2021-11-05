@@ -39,12 +39,12 @@ namespace SpiritAstro.WebApi.Controllers
 
         [HttpGet("admin")]
         [CasbinAuthorize]
-        public async Task<IActionResult> GetPostsForAdmin([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
+        public IActionResult GetPostsForAdmin([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
             string sort, int page, int limit)
         {
             try
             {
-                var posts = await _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
+                var posts = _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
                 return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
             }
             catch (ErrorResponse e)
@@ -55,7 +55,7 @@ namespace SpiritAstro.WebApi.Controllers
         
         [HttpGet("astrologer")]
         [CasbinAuthorize]
-        public async Task<IActionResult> GetPostsForAstrologer([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
+        public IActionResult GetPostsForAstrologer([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
             string sort, int page, int limit)
         {
             try
@@ -63,7 +63,7 @@ namespace SpiritAstro.WebApi.Controllers
                 var claims = (CustomClaims)HttpContext.Items["claims"];
                 var id = claims!.UserId;
                 postFilter.AstrologerId = id;
-                var posts = await _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
+                var posts = _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
                 return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
             }
             catch (ErrorResponse e)

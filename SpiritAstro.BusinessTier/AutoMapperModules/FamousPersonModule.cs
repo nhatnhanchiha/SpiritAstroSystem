@@ -17,7 +17,9 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
             mc.CreateMap<CreateFamousPersonRequest, FamousPerson>();
             mc.CreateMap<FamousPerson, FamousPersonModel>()
                 .ForMember(des => des.ZodiacName, opt 
-                => opt.MapFrom(src => src.Zodiac.Name));
+                => opt.MapFrom(src => src.Zodiac.Name))
+                .ForMember(des => des.ZodiacIds, opt 
+                => opt.Ignore());
             mc.CreateMap<FamousPersonModel, FamousPerson>();
             mc.CreateMap<UpdateFamousPersonRequest, FamousPerson>();
         }

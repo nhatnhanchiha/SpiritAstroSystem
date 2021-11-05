@@ -43,17 +43,29 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public async Task<PageResult<FamousPersonModel>> GetListFamousPerson(FamousPersonModel famousPersonFilter, int page, int limit, string sort, string[] fields)
         {
-            var (total, queryable) = Get().ProjectTo<FamousPersonModel>(_mapper)
-                 .DynamicFilter(famousPersonFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            int total = 0;
+            IQueryable<FamousPersonModel> queryable;
+            queryable =  Get().ProjectTo<FamousPersonModel>(_mapper);
+
+            if (famousPersonFilter.ZodiacIds is { Count: > 0 })
+            {
+                queryable = queryable.Where(p =>  famousPersonFilter.ZodiacIds.Contains(p.ZodiacId.Value));
+            }
+            
+            (total, queryable) = queryable.DynamicFilter(famousPersonFilter).PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            
             if (sort != null)
             {
                 queryable = queryable.OrderBy(sort);
             }
+            
+            
             if (fields.Length > 0)
             {
                 queryable = queryable.Select<FamousPersonModel>(FamousPersonModel.Fields.Intersect(fields).ToArray()
                     .ToDynamicSelector<FamousPersonModel>());
             }
+            
             return new PageResult<FamousPersonModel>
             {
                 List = await queryable.ToListAsync(),

@@ -19,6 +19,7 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
                 .ForMember(des => des.Id, opt 
                 => opt.MapFrom(src => src.UserId));
             mc.CreateMap<UpdateAstrologerRequest, Astrologer>();
+            mc.CreateMap<Astrologer, PublicAstrologerModelForAdmin>();
         }
     }
 }
