@@ -72,6 +72,7 @@ namespace SpiritAstro.WebApi.Controllers
         {
             var channelName = "astro_" + astrologerId;
             var agoraResponse = await _redisService.GetFromRedis<AgoraResponse>(channelName);
+            
             if (agoraResponse == null)
             {
                 return Ok(MyResponse<object>.FailWithMessage("This astrologer is not ready for meeting!"));
@@ -79,7 +80,5 @@ namespace SpiritAstro.WebApi.Controllers
 
             return Ok(MyResponse<AgoraResponse>.OkWithData(agoraResponse));
         }
-
-
     }
 }

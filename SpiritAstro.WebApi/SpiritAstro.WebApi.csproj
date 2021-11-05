@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\OneDrive\Máy tính\New folder (2)\Tools-master\DynamicKey\AgoraDynamicKey\csharp\src\AgoraIO\AgoraIO.csproj" />
+      <ProjectReference Include="..\AgoraIO\AgoraIO.csproj" />
       <ProjectReference Include="..\SpiritAstro.BusinessTier\SpiritAstro.BusinessTier.csproj" />
       <ProjectReference Include="..\SpiritAstro.DataTier\SpiritAstro.DataTier.csproj" />
     </ItemGroup>
