@@ -1,10 +1,14 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
+using AgoraIO.Media;
 using Microsoft.AspNetCore.Mvc;
+using SpiritAstro.BusinessTier.Commons.Constants;
 using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Astrologer;
 using SpiritAstro.BusinessTier.Responses;
+using SpiritAstro.BusinessTier.Responses.Agora;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using SpiritAstro.WebApi.Attributes;
 
@@ -37,7 +41,7 @@ namespace SpiritAstro.WebApi.Controllers
                 return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
             }
         }
-        
+
         [HttpGet("admin")]
         public async Task<IActionResult> GetAllAstrologersForAdmin([FromQuery] PublicAstrologerModelForAdmin filter,
             [FromQuery] string[] fields, string sort, int page, int limit)

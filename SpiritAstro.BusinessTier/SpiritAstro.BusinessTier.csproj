@@ -41,7 +41,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Commons\Constants" />
       <Folder Include="Resources" />
     </ItemGroup>
 

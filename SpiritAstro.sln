@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpiritAstro.DataTier", "Spi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpiritAstro.BusinessTier", "SpiritAstro.BusinessTier\SpiritAstro.BusinessTier.csproj", "{76A486A6-5ABC-415F-8169-86A3953F0B4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgoraIO", "..\..\OneDrive\Máy tính\New folder (2)\Tools-master\DynamicKey\AgoraDynamicKey\csharp\src\AgoraIO\AgoraIO.csproj", "{7C39D068-7A84-4F11-84A8-B3A4F1BF4530}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{76A486A6-5ABC-415F-8169-86A3953F0B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76A486A6-5ABC-415F-8169-86A3953F0B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76A486A6-5ABC-415F-8169-86A3953F0B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C39D068-7A84-4F11-84A8-B3A4F1BF4530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C39D068-7A84-4F11-84A8-B3A4F1BF4530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C39D068-7A84-4F11-84A8-B3A4F1BF4530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C39D068-7A84-4F11-84A8-B3A4F1BF4530}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -9,6 +9,7 @@ namespace SpiritAstro.BusinessTier.Services
     {
         Task CacheToRedis<T>(string key, T data, TimeSpan timeSpan);
         Task<T> GetFromRedis<T>(string key);
+        Task DeleteFromRedis(string key);
     }
     
     public class RedisService : IRedisService
@@ -38,6 +39,11 @@ namespace SpiritAstro.BusinessTier.Services
             
             var data = JsonSerializer.Deserialize<T>(dataString);
             return data;
+        }
+
+        public async Task DeleteFromRedis(string key)
+        {
+            await _distributedCache.RemoveAsync(key);
         }
     }
 }
