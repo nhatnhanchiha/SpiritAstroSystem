@@ -92,7 +92,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         public PageResult<PostModel> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit)
         {
-            var queryable =  Get().Where(p => p.DeletedAt == null).OrderByDescending(p => p.CreatedAt).Skip(0).Take(888).ProjectTo<PostModel>(_mapper);
+            var queryable =  Get().Where(p => postFilter.IsDeleted == null || ((bool)postFilter.IsDeleted
+                    ? p.DeletedAt != null
+                    : p.DeletedAt == null)).OrderByDescending(p => p.CreatedAt).Skip(0).Take(888).ProjectTo<PostModel>(_mapper);
             int total;
             
             if (postFilter.ZodiacIds is { Count: > 0 })

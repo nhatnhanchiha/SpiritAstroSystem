@@ -23,6 +23,10 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         Task<PageResult<PublicCustomerModel>> GetAllCustomers(PublicCustomerModel filter, string[] fields,
             string sort, int page, int limit);
 
+        Task<PageResult<PublicCustomerModelForAdmin>> GetAllCustomersForAdmin(PublicCustomerModelForAdmin filter,
+            string[] fields,
+            string sort, int page, int limit);
+
         Task<PublicCustomerModel> GetPublicCustomerById(long customerId);
         Task<CustomerModel> GetCustomerById(long customerId);
 
@@ -49,7 +53,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         public async Task<PageResult<PublicCustomerModel>> GetAllCustomers(PublicCustomerModel filter, string[] fields,
             string sort, int page, int limit)
         {
-            var (total, queryable) = Get().Where(c => c.DeletedAt == null).ProjectTo<PublicCustomerModel>(_mapper)
+            var (total, queryable) = Get().Where(c => c.DeletedAt == null ).ProjectTo<PublicCustomerModel>(_mapper)
                 .DynamicFilter(filter)
                 .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
             if (sort != null)
@@ -64,6 +68,33 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             }
 
             return new PageResult<PublicCustomerModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Limit = limit,
+                Total = total
+            };
+        }
+        public async Task<PageResult<PublicCustomerModelForAdmin>> GetAllCustomersForAdmin(PublicCustomerModelForAdmin filter, string[] fields,
+            string sort, int page, int limit)
+        {
+            var (total, queryable) = Get().Where(c => filter.IsDeleted == null || ((bool)filter.IsDeleted
+                    ? c.DeletedAt != null
+                    : c.DeletedAt == null)).ProjectTo<PublicCustomerModelForAdmin>(_mapper)
+                .DynamicFilter(filter)
+                .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<PublicCustomerModelForAdmin>(PublicCustomerModelForAdmin.Fields.Intersect(fields).ToArray()
+                    .ToDynamicSelector<PublicCustomerModelForAdmin>());
+            }
+
+            return new PageResult<PublicCustomerModelForAdmin>
             {
                 List = await queryable.ToListAsync(),
                 Page = page,

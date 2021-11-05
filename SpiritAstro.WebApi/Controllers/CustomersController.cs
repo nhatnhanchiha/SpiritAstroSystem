@@ -35,6 +35,21 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
+        [HttpGet("admin")]
+        public async Task<IActionResult> GetAllCustomersForAdmin([FromQuery] PublicCustomerModelForAdmin filter,
+            [FromQuery] string[] fields, string sort, int page, int limit)
+        {
+            try
+            {
+                var astrologers = await _customerService.GetAllCustomersForAdmin(filter, fields, sort, page, limit);
+                return Ok(MyResponse<PageResult<PublicCustomerModelForAdmin>>.OkWithData(astrologers));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
+
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetCustomerById(long id)
         {

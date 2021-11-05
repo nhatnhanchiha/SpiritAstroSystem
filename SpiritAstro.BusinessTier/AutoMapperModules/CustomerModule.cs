@@ -15,6 +15,7 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
             mc.CreateMap<RegisterCustomerRequest, Customer>();
             mc.CreateMap<UpdateCustomerRequest, Customer>();
             mc.CreateMap<Customer, CustomerInFollow>();
+            mc.CreateMap<Customer, PublicCustomerModelForAdmin>();
         }
     }
 }
