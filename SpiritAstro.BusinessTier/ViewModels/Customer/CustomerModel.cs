@@ -25,6 +25,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
         public string UrlImage { get; set; }
         public string Email { get; set; }
         public string PlaceOfBirth { get; set; }
+        public string NatalChartUrl { get; set; }
     }
 
     public class PublicCustomerModel
@@ -42,6 +43,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
         public DateTimeOffset? DeletedAt { get; set; }
         public string UrlImage { get; set; }
         public string PlaceOfBirth { get; set; }
+        public string NatalChartUrl { get; set; }
     }
 
     public class PublicCustomerModelForAdmin
