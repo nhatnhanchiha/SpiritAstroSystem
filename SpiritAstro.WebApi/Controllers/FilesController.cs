@@ -17,16 +17,21 @@ using Newtonsoft.Json;
 using SpiritAstro.BusinessTier.Commons.Constants;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Services;
+using SpiritAstro.WebApi.Attributes;
 
 namespace SpiritAstro.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FilesControllersController : ControllerBase
+    public class FilesController : ControllerBase
     {
         [HttpPost("uploadAvatar")]
+        [CustomAuthorize]
         public async Task<IActionResult> UploadAvatar(IFormFile file)
         {
+            if (file.Length > 25000000)
+                return BadRequest(new ErrorResponse(400, "Exceed 25MB"));
+            
             using (var client = new HttpClient())
             {
                 using (var content =
