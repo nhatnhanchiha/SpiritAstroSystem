@@ -13,7 +13,9 @@ using Firebase.Storage;
 using FirebaseAdmin;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SpiritAstro.BusinessTier.Commons.Constants;
+using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Services;
 
 namespace SpiritAstro.WebApi.Controllers
@@ -22,10 +24,31 @@ namespace SpiritAstro.WebApi.Controllers
     [ApiController]
     public class FilesControllersController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> Test()
+        [HttpPost("uploadAvatar")]
+        public async Task<IActionResult> UploadAvatar(IFormFile file)
         {
-            return Ok();
+            using (var client = new HttpClient())
+            {
+                using (var content =
+                    new MultipartFormDataContent())
+                {
+                    content.Add(new StreamContent(file.OpenReadStream()), "upload[]", "upload.jpg");
+
+                    using (
+                        var message =
+                            await client.PostAsync("http://localhost:8080/uploadAvatar", content))
+                    {
+                        var input = await message.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<List<string>>(input);
+                        if (result == null)
+                        {
+                            return Ok(MyResponse<object>.FailWithMessage("Upload fail"));
+                        }
+
+                        return Ok(MyResponse<string>.OkWithData(result.First()));
+                    }
+                }
+            }
         }
     }
 }

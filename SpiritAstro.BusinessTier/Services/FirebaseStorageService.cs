@@ -47,7 +47,7 @@ namespace SpiritAstro.BusinessTier.Services
 
                     using (
                         var message =
-                            await client.PostAsync("http://localhost:8080/upload", content))
+                            await client.PostAsync("http://localhost:8080/uploadNatalChart", content))
                     {
                         var input = await message.Content.ReadAsStringAsync();
                         return input;

@@ -27,7 +27,7 @@ namespace SpiritAstro.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetChart([FromQuery] GetNatalChartRequest request)
         {
-            var natalChartDataResponse = _astroChartService.Execute(request);
+            /*var natalChartDataResponse = _astroChartService.Execute(request);
             
             var zodiacPositionHouse = new ZodiacPositionHouse();
             zodiacPositionHouse.Initialize(natalChartDataResponse);
@@ -42,7 +42,8 @@ namespace SpiritAstro.WebApi.Controllers
             
             var firebaseStorageService = new FirebaseStorageService();
             var uploadFileGolang = await firebaseStorageService.UploadFileGolang(memoryStream.ToArray());
-            return Ok(uploadFileGolang);
+            return Ok(uploadFileGolang);*/
+            return Ok();
         }
     }
 }

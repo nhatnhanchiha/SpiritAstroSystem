@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SpiritAstro.BusinessTier.Commons.Utils;
 using SpiritAstro.BusinessTier.Generations.Repositories;
+using SpiritAstro.BusinessTier.Requests.AstroChart;
 using SpiritAstro.BusinessTier.Requests.Customer;
 using SpiritAstro.BusinessTier.Requests.UserRole;
 using SpiritAstro.BusinessTier.Responses;
+using SpiritAstro.BusinessTier.Services;
 using SpiritAstro.BusinessTier.ViewModels.Customer;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
@@ -39,13 +41,15 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     {
         private readonly IConfigurationProvider _mapper;
         private readonly IUserRoleService _userRoleService;
+        private readonly IAstroChartService _astroChartService;
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
 
-        public CustomerService(IUnitOfWork unitOfWork, ICustomerRepository repository, IMapper mapper, IUserRoleService userRoleService) : base(
+        public CustomerService(IUnitOfWork unitOfWork, ICustomerRepository repository, IMapper mapper, IUserRoleService userRoleService, IAstroChartService astroChartService) : base(
             unitOfWork, repository)
         {
             _userRoleService = userRoleService;
+            _astroChartService = astroChartService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -150,15 +154,32 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                         RoleId = "888",
                         UserId = customer.Id
                     });
+                    
+                    var getNatalChartRequest = new GetNatalChartRequest
+                    {
+                        Coordinates = Coordinates.FromLatLong(customer.LongitudeOfBirth, customer.LatitudeOfBirth),
+                        TimeOfBirthInUtcTime = customer.TimeOfBirth.DateTime
+                    };
+
+                    var url = await _astroChartService.Execute(getNatalChartRequest);
+
+                    customer.NatalChartUrl = url;
+                    await UpdateAsyn(customer);
+                    
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (ErrorResponse e)
                 {
+                    
                     await transaction.RollbackAsync();
+                    throw;
                     throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when registering a customer");
                 }
                 return;
             }
+
+           
+
 
             if (customerInDb.DeletedAt == null)
             {

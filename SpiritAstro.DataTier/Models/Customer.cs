@@ -28,6 +28,7 @@ namespace SpiritAstro.DataTier.Models
         public string UrlImage { get; set; }
         public string Email { get; set; }
         public string PlaceOfBirth { get; set; }
+        public string? NatalChartUrl { get; set; }
 
         public virtual User IdNavigation { get; set; }
         public virtual ICollection<Booking> Bookings { get; set; }
