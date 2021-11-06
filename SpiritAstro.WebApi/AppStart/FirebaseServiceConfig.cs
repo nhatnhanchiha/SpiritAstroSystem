@@ -1,4 +1,5 @@
 ﻿using FirebaseAdmin;
+using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.DependencyInjection;
 using SpiritAstro.BusinessTier.Services;
@@ -15,6 +16,7 @@ namespace SpiritAstro.WebApi.AppStart
                     GoogleCredential.FromFile("Resources/spiritastro-2bfba-firebase-adminsdk-qk1a8-2c46bb7e8a.json")
             });
             
+
             services.AddScoped<IFirebaseService, FirebaseService>();
         }
     }

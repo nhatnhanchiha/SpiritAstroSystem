@@ -25,7 +25,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetChart([FromQuery] GetNatalChartRequest request)
+        public async Task<IActionResult> GetChart([FromQuery] GetNatalChartRequest request)
         {
             var natalChartDataResponse = _astroChartService.Execute(request);
             
@@ -40,8 +40,9 @@ namespace SpiritAstro.WebApi.Controllers
             var memoryStream = new MemoryStream();
             image.Save(memoryStream, ImageFormat.Png);
             
-            var data = memoryStream.ToArray();
-            return File(data, "image/png");
+            var firebaseStorageService = new FirebaseStorageService();
+            var uploadFileGolang = await firebaseStorageService.UploadFileGolang(memoryStream.ToArray());
+            return Ok(uploadFileGolang);
         }
     }
 }

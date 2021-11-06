@@ -27,7 +27,6 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
                 .ForMember(des => des.ZodiacIds, opt => opt.Ignore());
             mc.CreateMap<PostModel, Post>();
             mc.CreateMap<UpdatePostRequest, Post>();
-            mc.CreateMap<Post, PostModel>();
         }
     }
 }

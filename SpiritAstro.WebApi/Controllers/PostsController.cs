@@ -39,12 +39,12 @@ namespace SpiritAstro.WebApi.Controllers
 
         [HttpGet("admin")]
         [CasbinAuthorize]
-        public IActionResult GetPostsForAdmin([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
+        public async Task<IActionResult> GetPostsForAdmin([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
             string sort, int page, int limit)
         {
             try
             {
-                var posts = _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
+                var posts =  await _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
                 return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
             }
             catch (ErrorResponse e)

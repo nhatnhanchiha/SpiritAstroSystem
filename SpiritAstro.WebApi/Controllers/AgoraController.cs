@@ -27,7 +27,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("start-a-channel")]
-        [CasbinAuthorize]
+        // [CasbinAuthorize]
         public IActionResult StartAChanel()
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -54,7 +54,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
         
         [HttpGet("stop-a-channel")]
-        [CasbinAuthorize]
+        // [CasbinAuthorize]
         public async Task<IActionResult> StopAChanel()
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
@@ -67,7 +67,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("get-info-for-customer")]
-        [CasbinAuthorize]
+        // [CasbinAuthorize]
         public async Task<IActionResult> GetAgoraInfo([FromQuery] long astrologerId)
         {
             var channelName = "astro_" + astrologerId;

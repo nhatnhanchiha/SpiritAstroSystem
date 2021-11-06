@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SpiritAstro.BusinessTier.Commons.Attributes;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using SpiritAstro.BusinessTier.ViewModels.Zodiac;
@@ -29,6 +26,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Post
         public long? AstrologerId { get; set; }
         [Skip]
         public bool? IsDeleted { get; set; }
+        [Skip]
         public List<int> ZodiacIds { get; set; }
         public PublicAstrologerModel Astrologer { get; set; }
         public List<ZodiacModel> Zodiacs { get; set; }

@@ -23,7 +23,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     public partial interface IPostService
     {
         Task<PageResult<PostModel>> GetPosts(PostModel postFilter, string[] fields, string sort, int page, int limit);
-        PageResult<PostModel> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit);
+        Task<PageResult<PostModel>> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit);
         Task<PostModel> GetPostById(long postId);
         Task<long> CreatePost(CreatePostRequest createPostRequest, long astrologerId);
         Task UpdatePost(long userId, long postId, UpdatePostRequest updatePostRequest);
@@ -90,16 +90,16 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             };
         }
 
-        public PageResult<PostModel> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit)
+        public async Task<PageResult<PostModel>> GetPostsForAdmin(PostModel postFilter, string[] fields, string sort, int page, int limit)
         {
             var queryable =  Get().Where(p => postFilter.IsDeleted == null || ((bool)postFilter.IsDeleted
                     ? p.DeletedAt != null
-                    : p.DeletedAt == null)).OrderByDescending(p => p.CreatedAt).Skip(0).Take(888).ProjectTo<PostModel>(_mapper);
+                    : p.DeletedAt == null)).ProjectTo<PostModel>(_mapper);
             int total;
             
             if (postFilter.ZodiacIds is { Count: > 0 })
             {
-                queryable = queryable.Where(p => p.Zodiacs.Any(z => postFilter.ZodiacIds.Contains(z.Id!.Value)));
+                queryable = queryable.Where(p => p.Zodiacs.Any(z => z.Id != null && postFilter.ZodiacIds.Contains(z.Id.Value)));
             }
             
             (total, queryable) = queryable
@@ -118,7 +118,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
             return new PageResult<PostModel>
             {
-                List = queryable.ToList(),
+                List = await queryable.ToListAsync(),
                 Page = page,
                 Limit = limit,
                 Total = total
