@@ -168,11 +168,10 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                     
                     await transaction.CommitAsync();
                 }
-                catch (ErrorResponse e)
+                catch (Exception e)
                 {
                     
                     await transaction.RollbackAsync();
-                    throw;
                     throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Error when registering a customer");
                 }
                 return;
@@ -206,7 +205,16 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             customerInDb.LatitudeOfBirth = customerInRequest.LatitudeOfBirth;
             customerInDb.LongitudeOfBirth = customerInRequest.LongitudeOfBirth;
             customerInDb.TimeOfBirth = customerInRequest.TimeOfBirth;
+
             
+            var getNatalChartRequest = new GetNatalChartRequest
+            {
+                Coordinates = Coordinates.FromLatLong(customerInDb.LongitudeOfBirth, customerInDb.LatitudeOfBirth),
+                TimeOfBirthInUtcTime = customerInDb.TimeOfBirth.DateTime
+            };
+
+            var url = await _astroChartService.Execute(getNatalChartRequest);
+            customerInDb.NatalChartUrl = url;
             await UpdateAsyn(customerInDb);
         }
 
