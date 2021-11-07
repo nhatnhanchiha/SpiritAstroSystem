@@ -23,6 +23,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.FamousPerson
         public string ZodiacName { get; set; }
         public string UrlImage { get; set; }
         public bool? Gender { get; set; }
+        public string DateOfBirth { get; set; }
         [Skip]
         public IList<int> ZodiacIds { get; set; }
     }

@@ -72,6 +72,8 @@ namespace SpiritAstro.DataTier.Models
                     .IsRequired()
                     .HasMaxLength(50);
 
+                entity.Property(e => e.NatalChartUrl).HasMaxLength(450);
+
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -172,9 +174,13 @@ namespace SpiritAstro.DataTier.Models
                     .IsRequired()
                     .HasMaxLength(50);
 
+                entity.Property(e => e.NatalChartUrl).HasMaxLength(450);
+
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.Property(e => e.PlaceOfBirth).HasMaxLength(200);
 
                 entity.Property(e => e.UrlImage).IsUnicode(false);
 
@@ -213,6 +219,8 @@ namespace SpiritAstro.DataTier.Models
                     .IsClustered(false);
 
                 entity.ToTable("FamousPerson");
+
+                entity.Property(e => e.DateOfBirth).HasMaxLength(20);
 
                 entity.Property(e => e.Description).IsRequired();
 
@@ -316,6 +324,8 @@ namespace SpiritAstro.DataTier.Models
                 entity.ToTable("Planet");
 
                 entity.Property(e => e.Description).IsRequired();
+
+                entity.Property(e => e.ImageUrl).HasMaxLength(1024);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -425,9 +435,7 @@ namespace SpiritAstro.DataTier.Models
 
                 entity.ToTable("Token");
 
-                entity.Property(e => e.TokenString)
-                    .HasMaxLength(255)
-                    .HasColumnName("TokenString");
+                entity.Property(e => e.TokenString).HasMaxLength(255);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Tokens)

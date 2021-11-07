@@ -36,6 +36,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("admin")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetAllCustomersForAdmin([FromQuery] PublicCustomerModelForAdmin filter,
             [FromQuery] string[] fields, string sort, int page, int limit)
         {

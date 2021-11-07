@@ -61,6 +61,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Customer
         public DateTimeOffset? DeletedAt { get; set; }
         public string UrlImage { get; set; }
         public string PlaceOfBirth { get; set; }
+        public string NatalChartUrl { get; set; }
         [Skip]
         public bool? IsDeleted { get; set; }
 

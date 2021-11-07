@@ -13,5 +13,6 @@ namespace SpiritAstro.BusinessTier.Requests.FamousPerson
         public int ZodiacId { get; set; }
         public string UrlImage { get; set; }
         public short Gender { get; set; }
+        public string DateOfBirth { get; set; }
     }
 }

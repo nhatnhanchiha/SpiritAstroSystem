@@ -7,6 +7,8 @@
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 using SpiritAstro.BusinessTier.Generations.Repositories;
+using SpiritAstro.BusinessTier.Services;
+
 namespace SpiritAstro.BusinessTier.Generations.Services
 {
     
@@ -15,6 +17,9 @@ namespace SpiritAstro.BusinessTier.Generations.Services
     }
     public partial class AstrologerService:BaseService<Astrologer>,IAstrologerService
     {
-        public AstrologerService(IUnitOfWork unitOfWork,IAstrologerRepository repository):base(unitOfWork,repository){}
+        public AstrologerService(IUnitOfWork unitOfWork,IAstrologerRepository repository, IAstroChartService astroChartService):base(unitOfWork,repository)
+        {
+            _astroChartService = astroChartService;
+        }
     }
 }

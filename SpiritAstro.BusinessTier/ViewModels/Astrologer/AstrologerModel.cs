@@ -45,6 +45,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
         public DateTimeOffset? DeletedAt { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
+        public string NatalChartUrl { get; set; }
         public int? FollowersCount { get; set; }
     }
     
@@ -67,6 +68,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public int? FollowersCount { get; set; }
+        public string NatalChartUrl { get; set; }
         [Skip]
         public bool? IsDeleted { get; set; }
     }

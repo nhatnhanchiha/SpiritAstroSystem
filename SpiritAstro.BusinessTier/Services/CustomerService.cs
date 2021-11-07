@@ -205,6 +205,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             customerInDb.LatitudeOfBirth = customerInRequest.LatitudeOfBirth;
             customerInDb.LongitudeOfBirth = customerInRequest.LongitudeOfBirth;
             customerInDb.TimeOfBirth = customerInRequest.TimeOfBirth;
+            customerInDb.PlaceOfBirth = customerInRequest.PlaceOfBirth;
 
             
             var getNatalChartRequest = new GetNatalChartRequest

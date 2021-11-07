@@ -10,8 +10,10 @@ using SpiritAstro.BusinessTier.Generations.Repositories;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using System.Linq.Dynamic.Core;
+using SpiritAstro.BusinessTier.Requests.AstroChart;
 using SpiritAstro.BusinessTier.Requests.Astrologer;
 using SpiritAstro.BusinessTier.Requests.UserRole;
+using SpiritAstro.BusinessTier.Services;
 using SpiritAstro.DataTier.BaseConnect;
 using SpiritAstro.DataTier.Models;
 
@@ -42,12 +44,14 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         private readonly IUserRoleService _userRoleService;
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
+        private readonly IAstroChartService _astroChartService;
 
         public AstrologerService(IUnitOfWork unitOfWork, IAstrologerRepository repository, IMapper mapper,
-            IUserRoleService userRoleService) : base(
+            IUserRoleService userRoleService, IAstroChartService astroChartService) : base(
             unitOfWork, repository)
         {
             _userRoleService = userRoleService;
+            _astroChartService = astroChartService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -164,6 +168,17 @@ namespace SpiritAstro.BusinessTier.Generations.Services
                         UserId = astrologer.Id,
                         RoleId = "8888"
                     });
+                    
+                    var getNatalChartRequest = new GetNatalChartRequest
+                    {
+                        Coordinates = Coordinates.FromLatLong(astrologer.LongitudeOfBirth, astrologer.LatitudeOfBirth),
+                        TimeOfBirthInUtcTime = astrologer.TimeOfBirth.DateTime
+                    };
+
+                    var url = await _astroChartService.Execute(getNatalChartRequest);
+
+                    astrologer.NatalChartUrl = url;
+                    await UpdateAsyn(astrologer);
                     await transaction.CommitAsync();
                 }
                 catch (Exception)
@@ -207,6 +222,15 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             astrologerInDb.TimeOfBirth = astrologerInRequest.TimeOfBirth;
             astrologerInDb.Description = astrologerInRequest.Description;
             astrologerInDb.ImageUrl = astrologerInRequest.ImageUrl;
+            
+            var getNatalChartRequest = new GetNatalChartRequest
+            {
+                Coordinates = Coordinates.FromLatLong(astrologerInDb.LongitudeOfBirth, astrologerInDb.LatitudeOfBirth),
+                TimeOfBirthInUtcTime = astrologerInDb.TimeOfBirth.DateTime
+            };
+
+            var url = await _astroChartService.Execute(getNatalChartRequest);
+            astrologerInDb.NatalChartUrl = url;
 
             await UpdateAsyn(astrologerInDb);
         }
