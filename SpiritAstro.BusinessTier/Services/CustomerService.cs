@@ -205,6 +205,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             customerInDb.LatitudeOfBirth = customerInRequest.LatitudeOfBirth;
             customerInDb.LongitudeOfBirth = customerInRequest.LongitudeOfBirth;
             customerInDb.TimeOfBirth = customerInRequest.TimeOfBirth;
+            customerInDb.UrlImage = customerInRequest.UrlImage;
             customerInDb.PlaceOfBirth = customerInRequest.PlaceOfBirth;
 
             
