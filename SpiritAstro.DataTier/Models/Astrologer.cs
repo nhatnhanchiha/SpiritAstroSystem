@@ -28,6 +28,7 @@ namespace SpiritAstro.DataTier.Models
         public DateTimeOffset? DeletedAt { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
+        public string NatalChartUrl { get; set; }
 
         public virtual User IdNavigation { get; set; }
         public virtual ICollection<Booking> Bookings { get; set; }
