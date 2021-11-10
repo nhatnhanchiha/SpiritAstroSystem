@@ -47,6 +47,8 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
         public string UrlImage { get; set; }
         public string NatalChartUrl { get; set; }
         public int? FollowersCount { get; set; }
+        [Skip]
+        public bool IsOnline { get; set; }
     }
     
     public class PublicAstrologerModelForAdmin
@@ -71,5 +73,7 @@ namespace SpiritAstro.BusinessTier.ViewModels.Astrologer
         public string NatalChartUrl { get; set; }
         [Skip]
         public bool? IsDeleted { get; set; }
+        [Skip]
+        public bool IsOnline { get; set; }
     }
 }

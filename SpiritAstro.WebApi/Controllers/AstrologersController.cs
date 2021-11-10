@@ -69,6 +69,21 @@ namespace SpiritAstro.WebApi.Controllers
                 return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
             }
         }
+        
+        [HttpGet("get-astrologer-non-online")]
+        public async Task<IActionResult> GetAllAstrologersNonOnline([FromQuery] PublicAstrologerModel filter,
+            [FromQuery] string[] fields, string sort, int page, int limit)
+        {
+            try
+            {
+                var astrologers = await _astrologerService.GetAllAstrologersNonOnline(filter, fields, sort, page, limit);
+                return Ok(MyResponse<PageResult<PublicAstrologerModel>>.OkWithData(astrologers));
+            }
+            catch (ErrorResponse e)
+            {
+                return Ok(MyResponse<object>.FailWithMessage(e.Error.Message));
+            }
+        }
 
         [HttpGet("admin")]
         public async Task<IActionResult> GetAllAstrologersForAdmin([FromQuery] PublicAstrologerModelForAdmin filter,
@@ -77,6 +92,13 @@ namespace SpiritAstro.WebApi.Controllers
             try
             {
                 var astrologers = await _astrologerService.GetAllAstrologersForAdmin(filter, fields, sort, page, limit);
+                foreach (var publicAstrologerModelForAdmin in astrologers.List)
+                {
+                    if (_astroOnlineService.GetSetAstroOnline().Contains(publicAstrologerModelForAdmin.Id!.Value))
+                    {
+                        publicAstrologerModelForAdmin.IsOnline = true;
+                    }
+                }
                 return Ok(MyResponse<PageResult<PublicAstrologerModelForAdmin>>.OkWithData(astrologers));
             }
             catch (ErrorResponse e)

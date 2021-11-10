@@ -78,6 +78,7 @@ namespace SpiritAstro.WebApi.Controllers
         }
 
         [HttpGet("admin/{id:long}")]
+        [CasbinAuthorize]
         public async Task<IActionResult> GetCustomerByIdForAdmin(long id)
         {
             try

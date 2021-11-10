@@ -25,6 +25,8 @@ namespace SpiritAstro.BusinessTier.Generations.Services
 
         Task<PageResult<PublicAstrologerModel>> GetAllAstrologers(PublicAstrologerModel filter, string[] fields,
             string sort, int page, int limit);
+        Task<PageResult<PublicAstrologerModel>> GetAllAstrologersNonOnline(PublicAstrologerModel filter, string[] fields,
+            string sort, int page, int limit);
 
         Task<PageResult<PublicAstrologerModelForAdmin>> GetAllAstrologersForAdmin(PublicAstrologerModelForAdmin filter,
             string[] fields,
@@ -46,13 +48,15 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         private const int DefaultPaging = 20;
         private const int LimitPaging = 20;
         private readonly IAstroChartService _astroChartService;
+        private readonly IAstroOnlineService _astroOnlineService;
 
         public AstrologerService(IUnitOfWork unitOfWork, IAstrologerRepository repository, IMapper mapper,
-            IUserRoleService userRoleService, IAstroChartService astroChartService) : base(
+            IUserRoleService userRoleService, IAstroChartService astroChartService, IAstroOnlineService astroOnlineService) : base(
             unitOfWork, repository)
         {
             _userRoleService = userRoleService;
             _astroChartService = astroChartService;
+            _astroOnlineService = astroOnlineService;
             _mapper = mapper.ConfigurationProvider;
         }
 
@@ -70,6 +74,32 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             string[] fields, string sort, int page, int limit)
         {
             var (total, queryable) = Get().Where(a => a.DeletedAt == null).ProjectTo<PublicAstrologerModel>(_mapper)
+                .DynamicFilter(filter)
+                .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
+            if (sort != null)
+            {
+                queryable = queryable.OrderBy(sort);
+            }
+
+            if (fields.Length > 0)
+            {
+                queryable = queryable.Select<PublicAstrologerModel>(PublicAstrologerModel.Fields.Intersect(fields)
+                    .ToArray()
+                    .ToDynamicSelector<PublicAstrologerModel>());
+            }
+
+            return new PageResult<PublicAstrologerModel>
+            {
+                List = await queryable.ToListAsync(),
+                Page = page,
+                Limit = limit,
+                Total = total
+            };
+        }
+
+        public async Task<PageResult<PublicAstrologerModel>> GetAllAstrologersNonOnline(PublicAstrologerModel filter, string[] fields, string sort, int page, int limit)
+        {
+            var (total, queryable) = Get().Where(a => a.DeletedAt == null && !_astroOnlineService.GetSetAstroOnline().Contains(a.Id)).ProjectTo<PublicAstrologerModel>(_mapper)
                 .DynamicFilter(filter)
                 .PagingIQueryable(page, limit, LimitPaging, DefaultPaging);
             if (sort != null)
