@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Post;
@@ -55,7 +54,7 @@ namespace SpiritAstro.WebApi.Controllers
         
         [HttpGet("astrologer")]
         [CasbinAuthorize]
-        public IActionResult GetPostsForAstrologer([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
+        public async Task<IActionResult> GetPostsForAstrologer([FromQuery] PostModel postFilter, [FromQuery] string[] fields,
             string sort, int page, int limit)
         {
             try
@@ -63,7 +62,7 @@ namespace SpiritAstro.WebApi.Controllers
                 var claims = (CustomClaims)HttpContext.Items["claims"];
                 var id = claims!.UserId;
                 postFilter.AstrologerId = id;
-                var posts = _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
+                var posts = await _postService.GetPostsForAdmin(postFilter, fields, sort, page, limit);
                 return Ok(MyResponse<PageResult<PostModel>>.OkWithData(posts));
             }
             catch (ErrorResponse e)

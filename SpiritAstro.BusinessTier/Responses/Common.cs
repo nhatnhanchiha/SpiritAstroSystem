@@ -39,11 +39,6 @@ namespace SpiritAstro.BusinessTier.Responses
             };
         }
 
-        public static object OkWithData(object walletModel)
-        {
-            throw new NotImplementedException();
-        }
-
         public static MyResponse<T> OkWithDetail(T data, string message)
         {
             return new MyResponse<T>

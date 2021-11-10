@@ -77,6 +77,24 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
+        [HttpGet("admin/{id:long}")]
+        public async Task<IActionResult> GetCustomerByIdForAdmin(long id)
+        {
+            try
+            {
+                var customerModel = await _customerService.GetPublicCustomerByIdForAdmin(id);
+                return  Ok(MyResponse<PublicCustomerModel>.OkWithData(customerModel));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    (int)HttpStatusCode.NotFound => Ok(MyResponse<object>.FailWithMessage(e.Error.Message)),
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
         [HttpPost]
         [CustomAuthorize]
         public async Task<IActionResult> RegisterACustomer([FromBody] RegisterCustomerRequest registerCustomerRequest)

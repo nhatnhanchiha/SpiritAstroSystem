@@ -31,6 +31,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             string sort, int page, int limit);
 
         Task<PublicAstrologerModel> GetPublicAstrologerById(long astrologerId);
+        Task<PublicAstrologerModel> GetPublicAstrologerByIdForAdmin(long astrologerId);
         Task<AstrologerModel> GetAstrologerById(long astrologerId);
         Task RegisterAnAstrologer(RegisterAstrologerRequest registerAstrologerRequest);
         Task UpdateAnAstrologer(long astrologerId, UpdateAstrologerRequest updateAstrologerRequest);
@@ -127,6 +128,19 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         {
             var astrologer = await Get().ProjectTo<PublicAstrologerModel>(_mapper)
                 .FirstOrDefaultAsync(a => a.Id == astrologerId && a.DeletedAt == null);
+            if (astrologer == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any astrologer matches id = {astrologerId}");
+            }
+
+            return astrologer;
+        }
+
+        public async Task<PublicAstrologerModel> GetPublicAstrologerByIdForAdmin(long astrologerId)
+        {
+            var astrologer = await Get().ProjectTo<PublicAstrologerModel>(_mapper)
+                .FirstOrDefaultAsync(a => a.Id == astrologerId);
             if (astrologer == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,

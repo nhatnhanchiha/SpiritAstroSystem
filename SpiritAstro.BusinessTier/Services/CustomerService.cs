@@ -30,6 +30,7 @@ namespace SpiritAstro.BusinessTier.Generations.Services
             string sort, int page, int limit);
 
         Task<PublicCustomerModel> GetPublicCustomerById(long customerId);
+        Task<PublicCustomerModel> GetPublicCustomerByIdForAdmin(long customerId);
         Task<CustomerModel> GetCustomerById(long customerId);
 
         Task RegisterACustomer(long userId, RegisterCustomerRequest registerCustomerRequest);
@@ -111,6 +112,19 @@ namespace SpiritAstro.BusinessTier.Generations.Services
         {
             var publicCustomerModel = await Get().ProjectTo<PublicCustomerModel>(_mapper)
                 .FirstOrDefaultAsync(c => c.Id == customerId && c.DeletedAt == null);
+            if (publicCustomerModel == null)
+            {
+                throw new ErrorResponse((int)HttpStatusCode.NotFound,
+                    $"Cannot find any customer matches with id = {customerId}");
+            }
+
+            return publicCustomerModel;
+        }
+
+        public async Task<PublicCustomerModel> GetPublicCustomerByIdForAdmin(long customerId)
+        {
+            var publicCustomerModel = await Get().ProjectTo<PublicCustomerModel>(_mapper)
+                .FirstOrDefaultAsync(c => c.Id == customerId);
             if (publicCustomerModel == null)
             {
                 throw new ErrorResponse((int)HttpStatusCode.NotFound,

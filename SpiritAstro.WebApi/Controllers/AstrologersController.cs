@@ -85,6 +85,25 @@ namespace SpiritAstro.WebApi.Controllers
             }
         }
 
+        [HttpGet("admin/{id:long}")]
+        [CasbinAuthorize]
+        public async Task<IActionResult> GetAstrologerForAdmin(long id)
+        {
+            try
+            {
+                var astrologerModel = await _astrologerService.GetPublicAstrologerByIdForAdmin(id);
+                return Ok(MyResponse<PublicAstrologerModel>.OkWithData(astrologerModel));
+            }
+            catch (ErrorResponse e)
+            {
+                return e.Error.Code switch
+                {
+                    (int)HttpStatusCode.NotFound => Ok(MyResponse<object>.FailWithMessage(e.Error.Message)),
+                    _ => Ok(MyResponse<object>.FailWithMessage(e.Error.Message))
+                };
+            }
+        }
+
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetAstrologerById(long id)
         {
