@@ -73,12 +73,7 @@ namespace SpiritAstro.WebApi.Controllers
             
             return Ok(MyResponse<AgoraObject>.OkWithData(response));
         }
-
-        [HttpGet("test")]
-        public IActionResult GetListOnline()
-        {
-            return Ok(_astroOnlineService.GetSetAstroOnline().ToList());
-        }
+        
         
         [HttpGet("stop-a-channel")]
         [CasbinAuthorize]
