@@ -14,12 +14,16 @@ namespace SpiritAstro.BusinessTier.AutoMapperModules
             mc.CreateMap<Astrologer, AstrologerInFollow>();
             mc.CreateMap<Astrologer, PublicAstrologerModel>()
                 .ForMember(des => des.FollowersCount, opt
-                => opt.MapFrom(src => src.Follows.Count(f => f.AstrologerId == src.Id)));
+                => opt.MapFrom(src => src.Follows.Count(f => f.AstrologerId == src.Id)))
+                .ForMember(des => des.UrlImage, opt 
+                => opt.MapFrom(src => src.ImageUrl));
             mc.CreateMap<RegisterAstrologerRequest, Astrologer>()
                 .ForMember(des => des.Id, opt 
                 => opt.MapFrom(src => src.UserId));
             mc.CreateMap<UpdateAstrologerRequest, Astrologer>();
-            mc.CreateMap<Astrologer, PublicAstrologerModelForAdmin>();
+            mc.CreateMap<Astrologer, PublicAstrologerModelForAdmin>()
+                .ForMember(des => des.UrlImage, opt
+                => opt.MapFrom(src => src.ImageUrl));
         }
     }
 }
