@@ -1,14 +1,20 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AgoraIO.Media;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SpiritAstro.BusinessTier.Commons.Constants;
+using SpiritAstro.BusinessTier.Commons.Utils;
 using SpiritAstro.BusinessTier.Entities;
 using SpiritAstro.BusinessTier.Generations.Services;
 using SpiritAstro.BusinessTier.Requests.Astrologer;
 using SpiritAstro.BusinessTier.Responses;
 using SpiritAstro.BusinessTier.Responses.Agora;
+using SpiritAstro.BusinessTier.Services;
 using SpiritAstro.BusinessTier.ViewModels.Astrologer;
 using SpiritAstro.WebApi.Attributes;
 
@@ -20,11 +26,33 @@ namespace SpiritAstro.WebApi.Controllers
     {
         private readonly IAstrologerService _astrologerService;
         private readonly IUserRoleService _userRoleService;
+        private readonly IAstroOnlineService _astroOnlineService;
+        private readonly IConfigurationProvider _mapper;
 
-        public AstrologersController(IAstrologerService astrologerService, IUserRoleService userRoleService)
+        public AstrologersController(IAstrologerService astrologerService, IUserRoleService userRoleService, IMapper mapper, IAstroOnlineService astroOnlineService)
         {
             _astrologerService = astrologerService;
             _userRoleService = userRoleService;
+            _astroOnlineService = astroOnlineService;
+            _mapper = mapper.ConfigurationProvider;
+
+        }
+
+        [HttpGet("get-astrologer-online")]
+        public async Task<IActionResult> GetAstrologerOnline(int page, int limit)
+        {
+            var (total, queryable) = _astrologerService.Get(a => a.DeletedAt == null)
+                .Where(a => _astroOnlineService.GetSetAstroOnline().Contains(a.Id))
+                .ProjectTo<PublicAstrologerModel>(_mapper)
+                .PagingIQueryable(page, limit, 20, 20);
+
+            return Ok(MyResponse<PageResult<PublicAstrologerModel>>.OkWithData(new PageResult<PublicAstrologerModel>
+            {
+                Limit = limit,
+                Page = page,
+                List = await queryable.ToListAsync(),
+                Total = total,
+            }));
         }
 
         [HttpGet]
@@ -85,7 +113,8 @@ namespace SpiritAstro.WebApi.Controllers
 
         [HttpPost]
         [CasbinAuthorize]
-        public async Task<IActionResult> RegisterAnAstrologer([FromBody] RegisterAstrologerRequest registerAstrologerRequest)
+        public async Task<IActionResult> RegisterAnAstrologer(
+            [FromBody] RegisterAstrologerRequest registerAstrologerRequest)
         {
             try
             {
@@ -106,7 +135,8 @@ namespace SpiritAstro.WebApi.Controllers
 
         [HttpPut("{id:long}")]
         [CasbinAuthorize]
-        public async Task<IActionResult> UpdateAnAstrologer(long id, [FromBody] UpdateAstrologerRequest updateAstrologerRequest)
+        public async Task<IActionResult> UpdateAnAstrologer(long id,
+            [FromBody] UpdateAstrologerRequest updateAstrologerRequest)
         {
             var claims = (CustomClaims)HttpContext.Items["claims"];
 

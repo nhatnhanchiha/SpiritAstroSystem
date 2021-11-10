@@ -66,6 +66,8 @@ namespace SpiritAstro.WebApi
 
             services.ConfigureRedisServices();
 
+            services.AddSingleton<IAstroOnlineService, AstroOnlineService>();
+
             services.AddDbContext<SpiritAstroContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DbContext")));
         }
