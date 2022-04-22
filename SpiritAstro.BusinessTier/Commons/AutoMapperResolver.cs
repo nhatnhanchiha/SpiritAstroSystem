@@ -7,7 +7,6 @@ namespace SpiritAstro.BusinessTier.Commons
 
         public AutoMapperResolver()
         {
-            //CreateMap<DataService.Models.CheckFinger, DataService.ViewModels.CheckFingerViewModel>();
 
 
         }
